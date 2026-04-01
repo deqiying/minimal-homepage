@@ -1,0 +1,73 @@
+{
+  "pageTitle": "在线服务",
+  "titleTyping": ["在线服务", "My Home Services"],
+  "subtitle": "配置驱动的个人主页导航",
+  "layout": {
+    "columns": {
+      "desktop": 3,
+      "tablet": 2,
+      "mobile": 1
+    }
+  },
+  "typewriter": {
+    "typeSpeed": 100,
+    "backSpeed": 60,
+    "backDelay": 1800,
+    "startDelay": 250,
+    "loop": true,
+    "cursorChar": "_"
+  },
+  "links": [
+    {
+      "name": "我的笔记",
+      "url": "https://example.com/notes",
+      "icon": "home"
+    },
+    {
+      "name": "哪吒探针",
+      "url": "https://example.com/probe",
+      "icon": "monitor"
+    },
+    {
+      "name": "简单图床",
+      "url": "https://example.com/image-bed",
+      "icon": "image"
+    },
+    {
+      "name": "我的服务器",
+      "url": "https://example.com/servers",
+      "icon": "server"
+    },
+    {
+      "name": "剩余价值计算器",
+      "url": "https://example.com/calculator",
+      "icon": "calculator"
+    },
+    {
+      "name": "NodeSeek 关键词提醒",
+      "url": "https://example.com/nodeseek",
+      "icon": "bot"
+    },
+    {
+      "name": "邮件服务",
+      "url": "https://example.com/mail",
+      "icon": "mail"
+    },
+    {
+      "name": "文件网盘",
+      "url": "https://example.com/drive",
+      "icon": "cloud",
+      "highlighted": true
+    },
+    {
+      "name": "在线记事",
+      "url": "https://example.com/notebook",
+      "icon": "notebook"
+    },
+    {
+      "name": "博客访问统计",
+      "url": "https://example.com/stats",
+      "icon": "chart"
+    }
+  ]
+}
