@@ -9,7 +9,14 @@ const config = ref<SiteConfig | null>(null)
 const loading = ref(true)
 
 onMounted(async () => {
-  config.value = await loadSiteConfig()
+  const loadedConfig = await loadSiteConfig()
+  config.value = loadedConfig
+
+  const pageTitle = loadedConfig.pageTitle.trim()
+  if (pageTitle.length > 0) {
+    document.title = pageTitle
+  }
+
   loading.value = false
 })
 </script>
