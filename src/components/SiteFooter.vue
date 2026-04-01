@@ -1,0 +1,303 @@
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import type { FooterConfig } from '../types/site-config'
+import AppIcon from './AppIcon.vue'
+
+const props = defineProps<{
+  footer: FooterConfig
+  pageTitle: string
+}>()
+
+const isCompact = ref(false)
+let scrollFrameId: number | null = null
+
+const updateCompactState = () => {
+  isCompact.value = window.scrollY > 72
+}
+
+const handleScroll = () => {
+  if (scrollFrameId !== null) {
+    return
+  }
+
+  scrollFrameId = window.requestAnimationFrame(() => {
+    updateCompactState()
+    scrollFrameId = null
+  })
+}
+
+onMounted(() => {
+  updateCompactState()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+  if (scrollFrameId !== null) {
+    window.cancelAnimationFrame(scrollFrameId)
+    scrollFrameId = null
+  }
+})
+
+const currentYear = new Date().getFullYear()
+
+const brandName = computed(() => {
+  const configuredName = props.footer.brand.name?.trim() ?? ''
+  if (configuredName.length > 0) {
+    return configuredName
+  }
+
+  const fallbackName = props.pageTitle.trim()
+  return fallbackName.length > 0 ? fallbackName : 'Website'
+})
+
+const brandIcon = computed(() => props.footer.brand.icon?.trim() ?? '')
+
+const icpNumber = computed(() => props.footer.icp.number.trim())
+
+const showIcp = computed(() => props.footer.icp.enabled && icpNumber.value.length > 0)
+
+const icpUrl = computed(() => {
+  const configuredUrl = props.footer.icp.url?.trim() ?? ''
+  return configuredUrl.length > 0 ? configuredUrl : 'https://beian.miit.gov.cn/'
+})
+
+const copyrightText = computed(() => {
+  const configuredName = props.footer.copyright.name.trim()
+  const fallbackName = props.pageTitle.trim()
+  const displayName = configuredName.length > 0 ? configuredName : fallbackName
+
+  let yearText = String(currentYear)
+
+  if (props.footer.copyright.dynamicYear) {
+    const startYear = props.footer.copyright.startYear
+    if (typeof startYear === 'number' && Number.isInteger(startYear) && startYear > 0 && startYear < currentYear) {
+      yearText = `${startYear}-${currentYear}`
+    }
+  }
+
+  return `© ${yearText} ${displayName}`
+})
+
+const linkRel = (target?: '_self' | '_blank') =>
+  target === '_blank' ? 'noopener noreferrer' : undefined
+</script>
+
+<template>
+  <footer class="site-footer" :class="{ 'is-compact': isCompact }" aria-label="页脚信息">
+    <div class="site-footer__left">
+      <span class="site-footer__brand" :aria-label="`${brandName} brand`">
+        <AppIcon v-if="brandIcon" :name="brandIcon" />
+        <span class="site-footer__brand-name">{{ brandName }}</span>
+      </span>
+
+      <nav v-if="footer.navigation.length > 0" class="site-footer__nav" aria-label="Footer navigation">
+        <a
+          v-for="item in footer.navigation"
+          :key="`${item.name}-${item.url}`"
+          class="site-footer__nav-item"
+          :href="item.url"
+          :target="item.target ?? '_blank'"
+          :rel="linkRel(item.target)"
+        >
+          <AppIcon v-if="item.icon" :name="item.icon" />
+          <span>{{ item.name }}</span>
+        </a>
+      </nav>
+    </div>
+
+    <p class="site-footer__center">
+      <a
+        v-if="showIcp"
+        class="site-footer__record-link"
+        :href="icpUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {{ icpNumber }}
+      </a>
+      <span v-else>{{ copyrightText }}</span>
+    </p>
+  </footer>
+</template>
+
+<style scoped>
+.site-footer {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(0.55rem, 1.8vh, 1rem);
+  transform: translateX(-50%);
+  width: min(1220px, 92vw);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  min-height: clamp(3.1rem, 6vh, 4rem);
+  padding: clamp(0.65rem, 1.5vh, 0.9rem) clamp(0.95rem, 2vw, 1.4rem);
+  border: 1px solid color-mix(in srgb, var(--color-card-border) 88%, white 12%);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(130deg, rgb(20 27 40 / 0.84), rgb(20 27 40 / 0.62)),
+    linear-gradient(180deg, rgb(121 199 255 / 0.08), transparent 40%);
+  box-shadow: 0 18px 42px rgb(4 8 20 / 0.42);
+  backdrop-filter: blur(12px) saturate(120%);
+  animation: footer-float-in 0.45s ease-out;
+  transition:
+    min-height 0.22s ease,
+    padding 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease,
+    font-size 0.22s ease;
+}
+
+.site-footer.is-compact {
+  min-height: clamp(2.42rem, 4.4vh, 3.1rem);
+  padding: clamp(0.42rem, 0.95vh, 0.56rem) clamp(0.82rem, 1.7vw, 1.08rem);
+  box-shadow: 0 12px 28px rgb(4 8 20 / 0.34);
+}
+
+.site-footer.is-compact .site-footer__brand-name {
+  font-size: 0.86rem;
+}
+
+.site-footer.is-compact .site-footer__nav-item {
+  font-size: 0.81rem;
+}
+
+.site-footer.is-compact .site-footer__center {
+  font-size: 0.84rem;
+}
+
+.site-footer__left {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem 0.95rem;
+  flex-wrap: wrap;
+  max-width: min(68%, 770px);
+  color: var(--color-text-secondary);
+}
+
+.site-footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-text-primary);
+}
+
+.site-footer__brand-name {
+  font-size: 0.93rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.site-footer__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem 0.85rem;
+  flex-wrap: wrap;
+}
+
+.site-footer__nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: color 0.2s ease;
+}
+
+.site-footer__nav-item:hover,
+.site-footer__nav-item:focus-visible {
+  color: color-mix(in srgb, var(--color-accent) 78%, white);
+}
+
+.site-footer__center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  white-space: nowrap;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  letter-spacing: 0.015em;
+  pointer-events: auto;
+}
+
+.site-footer__record-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dashed transparent;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.site-footer__record-link:hover,
+.site-footer__record-link:focus-visible {
+  color: color-mix(in srgb, var(--color-accent) 80%, white);
+  border-color: color-mix(in srgb, var(--color-accent) 78%, white);
+}
+
+.site-footer :deep(.app-icon) {
+  width: 1rem;
+  height: 1rem;
+}
+
+@keyframes footer-float-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (max-width: 960px) {
+  .site-footer {
+    width: min(96vw, 740px);
+    left: 50%;
+    bottom: 0.5rem;
+    min-height: clamp(2.38rem, 5.6vh, 3rem);
+    display: block;
+    padding: 0.5rem 0.82rem;
+  }
+
+  .site-footer.is-compact {
+    min-height: clamp(2.2rem, 5vh, 2.72rem);
+    padding: 0.42rem 0.72rem;
+  }
+
+  .site-footer__left {
+    display: none;
+  }
+
+  .site-footer__center {
+    position: static;
+    transform: none;
+    width: 100%;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .site-footer__record-link {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer {
+    animation: none;
+    transition: none;
+  }
+}
+</style>

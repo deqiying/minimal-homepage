@@ -69,5 +69,36 @@
       "url": "https://example.com/stats",
       "icon": "chart"
     }
-  ]
+  ],
+  "footer": {
+    "enabled": true,
+    "brand": {
+      "name": "My Home Services",
+      "icon": "home"
+    },
+    "navigation": [
+      {
+        "name": "关于本站",
+        "url": "https://example.com/about",
+        "icon": "notebook",
+        "target": "_blank"
+      },
+      {
+        "name": "联系我",
+        "url": "https://example.com/contact",
+        "icon": "mail",
+        "target": "_blank"
+      }
+    ],
+    "icp": {
+      "enabled": true,
+      "number": "粤ICP备12345678号-1",
+      "url": "https://beian.miit.gov.cn/"
+    },
+    "copyright": {
+      "name": "example. All rights reserved.",
+      "startYear": 2023,
+      "dynamicYear": true
+    }
+  }
 }

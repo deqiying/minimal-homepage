@@ -17,14 +17,10 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   background:
-    linear-gradient(var(--color-grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-grid-line) 1px, transparent 1px),
     radial-gradient(circle at 13% -28%, rgb(136 229 255 / 0.38), transparent 36%),
     radial-gradient(circle at 84% -30%, rgb(129 116 255 / 0.2), transparent 34%),
     linear-gradient(180deg, #0b1019 0%, #131a26 32%, #141c2a 100%);
   background-size:
-    42px 42px,
-    42px 42px,
     cover,
     cover,
     cover;

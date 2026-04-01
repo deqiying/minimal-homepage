@@ -8,6 +8,7 @@
 
 - 单页极简：聚焦导航入口展示，结构清晰、维护成本低。
 - 配置驱动：通过 `public/config.json` 管理标题与跳转按钮。
+- 页脚可配置：支持网站图标、Footer navigation、备案号开关与版权文案。
 - 默认黑暗风：适合个人主页与开发者风格场景。
 - 打字机效果：标题支持 typewriter 动效并兼容 reduced-motion。
 - 纯静态部署：构建后仅产出 `dist/`，无需后端服务。
@@ -47,6 +48,46 @@ pnpm preview
 ```
 
 注意：请通过 HTTP 访问构建产物，不建议直接用 `file://` 打开 `dist/index.html`。
+
+## Footer 配置（备案号/版权/导航）
+
+`public/config.json` 可新增 `footer` 字段：
+
+```json
+{
+	"footer": {
+		"enabled": true,
+		"brand": {
+			"name": "My Home Services",
+			"icon": "home"
+		},
+		"navigation": [
+			{
+				"name": "关于本站",
+				"url": "https://example.com/about",
+				"icon": "notebook",
+				"target": "_blank"
+			}
+		],
+		"icp": {
+			"enabled": true,
+			"number": "粤ICP备12345678号-1",
+			"url": "https://beian.miit.gov.cn/"
+		},
+		"copyright": {
+			"name": "GitHub, Inc.",
+			"startYear": 2023,
+			"dynamicYear": true
+		}
+	}
+}
+```
+
+行为规则：
+
+- `footer.icp.enabled = true` 且 `footer.icp.number` 非空时：页脚中间显示备案号（可点击跳转）。
+- 未开启备案号时：页脚中间显示 `© 年份 web_name`，其中 `web_name` 来自 `footer.copyright.name`。
+- 年份由原生 `Date` 计算，不需要引入任何第三方插件。
 
 ## 部署说明（静态服务器）
 

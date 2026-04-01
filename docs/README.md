@@ -7,6 +7,7 @@
 ## 特性
 
 - 配置驱动：通过 public/config.json 管理页面文案和跳转入口。
+- 页脚配置化：支持网站图标、Footer navigation、备案号与版权文案切换。
 - 单页极简：聚焦个人主页导航，不依赖后端接口。
 - 响应式布局：支持桌面端、平板端、移动端。
 - 打字机标题：基于 typed.js 实现，支持 reduced-motion 降级。
@@ -91,6 +92,7 @@ pnpm preview
 - layout.columns.desktop/tablet/mobile: 不同端的网格列数。
 - typewriter: 打字机参数（速度、延迟、循环等）。
 - links: 导航按钮数组。
+- footer: 页脚配置（图标、导航、备案号、版权）。
 
 links 每项建议字段：
 
@@ -99,6 +101,25 @@ links 每项建议字段：
 - icon: 图标键（可选）。
 - target: \_blank 或 \_self（可选）。
 - highlighted: 是否高亮（可选）。
+
+footer 推荐字段：
+
+- enabled: 是否显示页脚（可选，默认 true）。
+- brand.name: 网站品牌名（可选，默认回退 pageTitle）。
+- brand.icon: 网站图标键（可选，复用 AppIcon 图标名）。
+- navigation: 页脚导航数组（可选，支持 name/url/icon/target）。
+- icp.enabled: 是否启用备案号显示。
+- icp.number: 备案号文本。
+- icp.url: 备案号跳转地址（默认工信部地址）。
+- copyright.name: 版权名称（未配置时回退 pageTitle）。
+- copyright.startYear: 起始年份（可选）。
+- copyright.dynamicYear: 是否使用动态年份（推荐 true）。
+
+页脚中间文案规则：
+
+- 当 `icp.enabled=true` 且 `icp.number` 非空时，居中显示备案号。
+- 否则居中显示 `© 年份 web_name`。
+- 年份使用原生 `Date` 计算，无需额外插件。
 
 ## 部署（纯静态）
 

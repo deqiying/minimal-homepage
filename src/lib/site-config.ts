@@ -1,4 +1,4 @@
-import type { SiteConfig, SiteLink } from '../types/site-config'
+import type { FooterConfig, FooterNavigationItem, SiteConfig, SiteLink } from '../types/site-config'
 
 const defaultConfig: SiteConfig = {
   pageTitle: '在线服务',
@@ -20,6 +20,23 @@ const defaultConfig: SiteConfig = {
     cursorChar: '_',
   },
   links: [],
+  footer: {
+    enabled: true,
+    brand: {
+      name: '',
+      icon: '',
+    },
+    navigation: [],
+    icp: {
+      enabled: false,
+      number: '',
+      url: 'https://beian.miit.gov.cn/',
+    },
+    copyright: {
+      name: '',
+      dynamicYear: true,
+    },
+  },
 }
 
 const sanitizeLink = (input: unknown): SiteLink | null => {
@@ -48,6 +65,122 @@ const sanitizeLink = (input: unknown): SiteLink | null => {
   }
 }
 
+const sanitizeFooterNavigationItem = (input: unknown): FooterNavigationItem | null => {
+  if (!input || typeof input !== 'object') {
+    return null
+  }
+
+  const candidate = input as Record<string, unknown>
+  const name = typeof candidate.name === 'string' ? candidate.name.trim() : ''
+  const url = typeof candidate.url === 'string' ? candidate.url.trim() : ''
+
+  if (!name || !url) {
+    return null
+  }
+
+  const icon = typeof candidate.icon === 'string' ? candidate.icon.trim() : undefined
+  const target = candidate.target === '_self' ? '_self' : '_blank'
+
+  return {
+    name,
+    url,
+    icon,
+    target,
+  }
+}
+
+const sanitizeFooter = (input: unknown, fallbackName: string): FooterConfig => {
+  const fallbackFooter: FooterConfig = {
+    ...defaultConfig.footer,
+    brand: {
+      ...defaultConfig.footer.brand,
+      name: fallbackName,
+    },
+    copyright: {
+      ...defaultConfig.footer.copyright,
+      name: fallbackName,
+    },
+  }
+
+  if (!input || typeof input !== 'object') {
+    return fallbackFooter
+  }
+
+  const candidate = input as Record<string, unknown>
+
+  const brandRaw = candidate.brand && typeof candidate.brand === 'object'
+    ? (candidate.brand as Record<string, unknown>)
+    : {}
+
+  const brandName = typeof brandRaw.name === 'string' && brandRaw.name.trim().length > 0
+    ? brandRaw.name.trim()
+    : fallbackName
+
+  const brandIcon = typeof brandRaw.icon === 'string' && brandRaw.icon.trim().length > 0
+    ? brandRaw.icon.trim()
+    : defaultConfig.footer.brand.icon
+
+  const navigation = Array.isArray(candidate.navigation)
+    ? candidate.navigation
+        .map(sanitizeFooterNavigationItem)
+        .filter((item): item is FooterNavigationItem => item !== null)
+    : defaultConfig.footer.navigation
+
+  const icpRaw = candidate.icp && typeof candidate.icp === 'object'
+    ? (candidate.icp as Record<string, unknown>)
+    : {}
+
+  const icpEnabled = typeof icpRaw.enabled === 'boolean'
+    ? icpRaw.enabled
+    : defaultConfig.footer.icp.enabled
+
+  const icpNumber = typeof icpRaw.number === 'string'
+    ? icpRaw.number.trim()
+    : defaultConfig.footer.icp.number
+
+  const icpUrl = typeof icpRaw.url === 'string' && icpRaw.url.trim().length > 0
+    ? icpRaw.url.trim()
+    : defaultConfig.footer.icp.url
+
+  const copyrightRaw = candidate.copyright && typeof candidate.copyright === 'object'
+    ? (candidate.copyright as Record<string, unknown>)
+    : {}
+
+  const copyrightName =
+    typeof copyrightRaw.name === 'string' && copyrightRaw.name.trim().length > 0
+      ? copyrightRaw.name.trim()
+      : fallbackName
+
+  const currentYear = new Date().getFullYear()
+  const startYear = Number(copyrightRaw.startYear)
+  const normalizedStartYear =
+    Number.isInteger(startYear) && startYear > 0 && startYear <= currentYear ? startYear : undefined
+
+  const dynamicYear =
+    typeof copyrightRaw.dynamicYear === 'boolean'
+      ? copyrightRaw.dynamicYear
+      : defaultConfig.footer.copyright.dynamicYear
+
+  return {
+    enabled: typeof candidate.enabled === 'boolean' ? candidate.enabled : defaultConfig.footer.enabled,
+    brand: {
+      name: brandName,
+      icon: brandIcon,
+    },
+    navigation,
+    icp: {
+      enabled: icpEnabled,
+      number: icpNumber,
+      url: icpUrl,
+    },
+    copyright: {
+      name: copyrightName,
+      startYear: normalizedStartYear,
+      dynamicYear,
+    },
+  }
+}
+
 const sanitizeConfig = (input: unknown): SiteConfig => {
   if (!input || typeof input !== 'object') {
     return defaultConfig
@@ -71,11 +204,15 @@ const sanitizeConfig = (input: unknown): SiteConfig => {
       ? (candidate.typewriter as Record<string, unknown>)
       : {}
 
+  const pageTitle =
+    typeof candidate.pageTitle === 'string' && candidate.pageTitle.trim().length > 0
+      ? candidate.pageTitle
+      : defaultConfig.pageTitle
+
+  const footer = sanitizeFooter(candidate.footer, pageTitle)
+
   return {
-    pageTitle:
-      typeof candidate.pageTitle === 'string' && candidate.pageTitle.trim().length > 0
-        ? candidate.pageTitle
-        : defaultConfig.pageTitle,
+    pageTitle,
     titleTyping: titleTyping.length > 0 ? titleTyping : defaultConfig.titleTyping,
     subtitle: typeof candidate.subtitle === 'string' ? candidate.subtitle : defaultConfig.subtitle,
     layout: {
@@ -109,6 +246,7 @@ const sanitizeConfig = (input: unknown): SiteConfig => {
           : defaultConfig.typewriter.cursorChar,
     },
     links,
+    footer,
   }
 }
 

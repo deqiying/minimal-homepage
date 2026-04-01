@@ -7,6 +7,7 @@ This is a single-page frontend site that generates navigation cards from a JSON 
 ## Features
 
 - Config-driven: manage title text and links in public/config.json.
+- Configurable footer: supports brand icon, footer navigation, ICP record switch, and copyright text.
 - Minimal single-page architecture: no backend APIs required.
 - Responsive layout: desktop, tablet, and mobile ready.
 - Typewriter title: powered by typed.js with reduced-motion fallback.
@@ -93,6 +94,7 @@ Key fields:
 - layout.columns.desktop/tablet/mobile: responsive grid columns.
 - typewriter: typing behavior options.
 - links: list of navigation items.
+- footer: footer settings (brand, navigation, ICP record, copyright).
 
 Recommended fields for each link item:
 
@@ -101,6 +103,25 @@ Recommended fields for each link item:
 - icon: icon key (optional).
 - target: \_blank or \_self (optional).
 - highlighted: highlighted style flag (optional).
+
+Recommended fields for footer:
+
+- enabled: whether to render footer (optional, default true).
+- brand.name: brand name (optional, falls back to pageTitle).
+- brand.icon: built-in AppIcon key for brand icon (optional).
+- navigation: footer navigation array (optional, supports name/url/icon/target).
+- icp.enabled: toggle ICP record display.
+- icp.number: ICP record text.
+- icp.url: ICP target URL (defaults to MIIT website).
+- copyright.name: copyright holder/web name.
+- copyright.startYear: starting year (optional).
+- copyright.dynamicYear: enable dynamic year rendering.
+
+Center text behavior:
+
+- If `icp.enabled=true` and `icp.number` is not empty, show ICP text in the center.
+- Otherwise show `© year web_name` in the center.
+- Year is computed with native `Date`, no extra plugin required.
 
 ## Deployment (Pure Static)
 

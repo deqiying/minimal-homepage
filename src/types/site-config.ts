@@ -25,6 +25,38 @@ export interface SiteLink {
   highlighted?: boolean
 }
 
+export interface FooterBrandConfig {
+  name?: string
+  icon?: string
+}
+
+export interface FooterNavigationItem {
+  name: string
+  url: string
+  icon?: string
+  target?: '_self' | '_blank'
+}
+
+export interface FooterIcpConfig {
+  enabled: boolean
+  number: string
+  url?: string
+}
+
+export interface FooterCopyrightConfig {
+  name: string
+  startYear?: number
+  dynamicYear: boolean
+}
+
+export interface FooterConfig {
+  enabled: boolean
+  brand: FooterBrandConfig
+  navigation: FooterNavigationItem[]
+  icp: FooterIcpConfig
+  copyright: FooterCopyrightConfig
+}
+
 export interface SiteConfig {
   pageTitle: string
   titleTyping: string[]
@@ -32,4 +64,5 @@ export interface SiteConfig {
   layout: GridLayoutConfig
   typewriter: TypewriterConfig
   links: SiteLink[]
+  footer: FooterConfig
 }

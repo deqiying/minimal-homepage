@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import LinkGrid from './components/LinkGrid.vue'
+import SiteFooter from './components/SiteFooter.vue'
 import TypewriterTitle from './components/TypewriterTitle.vue'
 import { loadSiteConfig } from './lib/site-config'
 import type { SiteConfig } from './types/site-config'
@@ -22,7 +23,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="page-shell">
+  <main class="page-shell" :class="{ 'has-floating-footer': Boolean(config?.footer.enabled) }">
     <section class="hero">
       <TypewriterTitle
         v-if="config"
@@ -44,6 +45,12 @@ onMounted(async () => {
     </p>
 
     <LinkGrid v-else-if="config" :links="config.links" :columns="config.layout.columns" />
+
+    <SiteFooter
+      v-if="config && config.footer.enabled"
+      :footer="config.footer"
+      :page-title="config.pageTitle"
+    />
   </main>
 </template>
 
@@ -52,6 +59,11 @@ onMounted(async () => {
   width: min(1220px, 92vw);
   margin: 0 auto;
   padding: clamp(2.4rem, 5vw, 4.1rem) 0 clamp(2.3rem, 5vw, 4.5rem);
+}
+
+.page-shell.has-floating-footer {
+  --floating-footer-safe-space: clamp(5.6rem, 13vh, 7.4rem);
+  padding-bottom: calc(clamp(2.3rem, 5vw, 4.5rem) + var(--floating-footer-safe-space));
 }
 
 .hero {
@@ -71,5 +83,11 @@ onMounted(async () => {
   font-size: 1.02rem;
   color: var(--color-text-secondary);
   font-weight: 500;
+}
+
+@media (max-width: 960px) {
+  .page-shell.has-floating-footer {
+    --floating-footer-safe-space: clamp(4.4rem, 11vh, 5.9rem);
+  }
 }
 </style>
