@@ -20,54 +20,58 @@ const updateDocumentTitle = (pageTitle: string) => {
 onMounted(async () => {
   updateDocumentTitle(config.value.pageTitle)
 
-  const loadedConfig = await loadSiteConfig()
-  config.value = loadedConfig
-  updateDocumentTitle(loadedConfig.pageTitle)
-  loading.value = false
+  try {
+    config.value = await loadSiteConfig()
+  } finally {
+    updateDocumentTitle(config.value.pageTitle)
+    loading.value = false
+  }
 })
 </script>
 
 <template>
   <main class="page-shell" :class="{ 'has-floating-footer': !loading && Boolean(config.footer.enabled) }">
-    <section class="hero">
-      <TypewriterTitle
-        :strings="config.titleTyping"
-        :type-speed="config.typewriter.typeSpeed"
-        :back-speed="config.typewriter.backSpeed"
-        :back-delay="config.typewriter.backDelay"
-        :start-delay="config.typewriter.startDelay"
-        :loop="config.typewriter.loop"
-        :cursor-char="config.typewriter.cursorChar"
-      />
-      <p v-if="config.subtitle" class="hero__subtitle">{{ config.subtitle }}</p>
-    </section>
-
     <section v-if="loading" class="loading-stage" aria-live="polite">
       <div class="loading-stage__panel">
         <p class="loading-stage__eyebrow">LOADING</p>
-        <p class="loading-stage__title">正在加载页面配置</p>
-        <p class="loading-stage__tip">正在读取 `config.yaml`，页面内容稍后就绪。</p>
+        <p class="loading-stage__title">正在加载页面</p>
+        <p class="loading-stage__tip">页面内容即将就绪，请稍候。</p>
       </div>
     </section>
 
-    <TimelineSection
-      v-else-if="config.timeline.length > 0"
-      class="page-section"
-      :entries="config.timeline"
-    />
+    <template v-else>
+      <section class="hero">
+        <TypewriterTitle
+          :strings="config.titleTyping"
+          :type-speed="config.typewriter.typeSpeed"
+          :back-speed="config.typewriter.backSpeed"
+          :back-delay="config.typewriter.backDelay"
+          :start-delay="config.typewriter.startDelay"
+          :loop="config.typewriter.loop"
+          :cursor-char="config.typewriter.cursorChar"
+        />
+        <p v-if="config.subtitle" class="hero__subtitle">{{ config.subtitle }}</p>
+      </section>
 
-    <LinkGrid
-      v-if="!loading && config.links.length > 0"
-      class="page-section page-section--links"
-      :links="config.links"
-      :columns="config.layout.columns"
-    />
+      <TimelineSection
+        v-if="config.timeline.length > 0"
+        class="page-section"
+        :entries="config.timeline"
+      />
 
-    <SiteFooter
-      v-if="!loading && config.footer.enabled"
-      :footer="config.footer"
-      :page-title="config.pageTitle"
-    />
+      <LinkGrid
+        v-if="config.links.length > 0"
+        class="page-section page-section--links"
+        :links="config.links"
+        :columns="config.layout.columns"
+      />
+
+      <SiteFooter
+        v-if="config.footer.enabled"
+        :footer="config.footer"
+        :page-title="config.pageTitle"
+      />
+    </template>
   </main>
 </template>
 
