@@ -47,6 +47,14 @@ export interface FooterIcpConfig {
   enabled: boolean
   number: string
   url?: string
+  icon?: string
+}
+
+export interface FooterPoliceConfig {
+  enabled: boolean
+  number: string
+  url?: string
+  icon?: string
 }
 
 export interface FooterCopyrightConfig {
@@ -60,6 +68,7 @@ export interface FooterConfig {
   brand: FooterBrandConfig
   navigation: FooterNavigationItem[]
   icp: FooterIcpConfig
+  police: FooterPoliceConfig
   copyright: FooterCopyrightConfig
 }
 

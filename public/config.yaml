@@ -83,6 +83,12 @@ footer:
     enabled: true
     number: 粤ICP备12345678号-1
     url: https://beian.miit.gov.cn/
+    icon: icp-record
+  police:
+    enabled: true
+    number: 粤公网安备44030002001234号
+    url: https://beian.gov.cn/
+    icon: police-badge
   copyright:
     name: example. All rights reserved.
     startYear: 2023

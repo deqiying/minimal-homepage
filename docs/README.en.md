@@ -8,7 +8,7 @@ This is a single-page frontend site that generates navigation cards and a vertic
 
 - Config-driven: manage title text, timeline entries, and links in public/config.yaml.
 - Better multiline authoring: timeline content uses YAML block text for easier editing.
-- Configurable footer: supports brand icon, footer navigation, ICP record switch, and copyright text.
+- Configurable footer: supports brand icon, footer navigation, ICP record, public security record, and copyright text.
 - Minimal single-page architecture: no backend APIs required.
 - Responsive layout: desktop, tablet, and mobile ready.
 - Typewriter title: powered by typed.js with reduced-motion fallback.
@@ -96,7 +96,7 @@ Key fields:
 - typewriter: typing behavior options.
 - timeline: timeline entry list.
 - links: list of navigation items.
-- footer: footer settings (brand, navigation, ICP record, copyright).
+- footer: footer settings (brand, navigation, ICP record, public security record, copyright).
 
 Recommended fields for each timeline item:
 
@@ -121,6 +121,11 @@ Recommended fields for footer:
 - icp.enabled: toggle ICP record display.
 - icp.number: ICP record text.
 - icp.url: ICP target URL (defaults to MIIT website).
+- icp.icon: ICP icon key (defaults to `icp-record`).
+- police.enabled: toggle public security record display.
+- police.number: public security record text.
+- police.url: public security target URL (defaults to `https://beian.gov.cn/`).
+- police.icon: public security icon key (defaults to `police-badge`).
 - copyright.name: copyright holder/web name.
 - copyright.startYear: starting year (optional).
 - copyright.dynamicYear: enable dynamic year rendering.
@@ -135,7 +140,8 @@ Supported lightweight formatting:
 
 Center text behavior:
 
-- If `icp.enabled=true` and `icp.number` is not empty, show ICP text in the center.
+- If either `icp` or `police` is enabled and has a non-empty record number, show the available record links in the center with icons.
+- If both are available, render them in `icp` then `police` order.
 - Otherwise show `© year web_name` in the center.
 - Year is computed with native `Date`, no extra plugin required.
 

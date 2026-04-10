@@ -8,7 +8,7 @@
 
 - 配置驱动：通过 public/config.yaml 管理页面文案、时间线和跳转入口。
 - 多行内容友好：时间线内容支持 YAML 块文本书写，更适合持续维护。
-- 页脚配置化：支持网站图标、Footer navigation、备案号与版权文案切换。
+- 页脚配置化：支持网站图标、Footer navigation、ICP备案、公安备案与版权文案切换。
 - 单页极简：聚焦个人主页导航，不依赖后端接口。
 - 响应式布局：支持桌面端、平板端、移动端。
 - 打字机标题：基于 typed.js 实现，支持 reduced-motion 降级。
@@ -94,7 +94,7 @@ pnpm preview
 - typewriter: 打字机参数（速度、延迟、循环等）。
 - timeline: 时间线数组。
 - links: 导航按钮数组。
-- footer: 页脚配置（图标、导航、备案号、版权）。
+- footer: 页脚配置（图标、导航、ICP备案、公安备案、版权）。
 
 timeline 每项推荐字段：
 
@@ -119,6 +119,11 @@ footer 推荐字段：
 - icp.enabled: 是否启用备案号显示。
 - icp.number: 备案号文本。
 - icp.url: 备案号跳转地址（默认工信部地址）。
+- icp.icon: 备案号图标键（默认 `icp-record`）。
+- police.enabled: 是否启用公安备案显示。
+- police.number: 公安备案号文本。
+- police.url: 公安备案跳转地址（默认 `https://beian.gov.cn/`）。
+- police.icon: 公安备案图标键（默认 `police-badge`）。
 - copyright.name: 版权名称（未配置时回退 pageTitle）。
 - copyright.startYear: 起始年份（可选）。
 - copyright.dynamicYear: 是否使用动态年份（推荐 true）。
@@ -133,8 +138,9 @@ footer 推荐字段：
 
 页脚中间文案规则：
 
-- 当 `icp.enabled=true` 且 `icp.number` 非空时，居中显示备案号。
-- 否则居中显示 `© 年份 web_name`。
+- 当 `icp` 或 `police` 中任一项启用且备案号非空时，居中显示对应备案项，并在文字前显示图标。
+- 当两类备案同时可用时，按 `icp` → `police` 的顺序显示。
+- 当两类备案都不可用时，居中显示 `© 年份 web_name`。
 - 年份使用原生 `Date` 计算，无需额外插件。
 
 ## 部署（纯静态）

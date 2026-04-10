@@ -11,6 +11,24 @@ const props = defineProps<{
 const isCompact = ref(false)
 let scrollFrameId: number | null = null
 
+interface FooterRecordItem {
+  key: 'icp' | 'police'
+  label: string
+  number: string
+  url: string
+  icon: string
+}
+
+const defaultRecordUrls = {
+  icp: 'https://beian.miit.gov.cn/',
+  police: 'https://beian.gov.cn/',
+} as const
+
+const defaultRecordIcons = {
+  icp: 'icp-record',
+  police: 'police-badge',
+} as const
+
 const updateCompactState = () => {
   isCompact.value = window.scrollY > 72
 }
@@ -52,15 +70,37 @@ const brandName = computed(() => {
 })
 
 const brandIcon = computed(() => props.footer.brand.icon?.trim() ?? '')
+const normalizeText = (value?: string) => value?.trim() ?? ''
 
-const icpNumber = computed(() => props.footer.icp.number.trim())
+const recordItems = computed<FooterRecordItem[]>(() => {
+  const items: FooterRecordItem[] = []
 
-const showIcp = computed(() => props.footer.icp.enabled && icpNumber.value.length > 0)
+  const icpNumber = normalizeText(props.footer.icp.number)
+  if (props.footer.icp.enabled && icpNumber.length > 0) {
+    items.push({
+      key: 'icp',
+      label: 'ICP备案',
+      number: icpNumber,
+      url: normalizeText(props.footer.icp.url) || defaultRecordUrls.icp,
+      icon: normalizeText(props.footer.icp.icon) || defaultRecordIcons.icp,
+    })
+  }
 
-const icpUrl = computed(() => {
-  const configuredUrl = props.footer.icp.url?.trim() ?? ''
-  return configuredUrl.length > 0 ? configuredUrl : 'https://beian.miit.gov.cn/'
+  const policeNumber = normalizeText(props.footer.police.number)
+  if (props.footer.police.enabled && policeNumber.length > 0) {
+    items.push({
+      key: 'police',
+      label: '公安备案',
+      number: policeNumber,
+      url: normalizeText(props.footer.police.url) || defaultRecordUrls.police,
+      icon: normalizeText(props.footer.police.icon) || defaultRecordIcons.police,
+    })
+  }
+
+  return items
 })
+
+const showRecords = computed(() => recordItems.value.length > 0)
 
 const copyrightText = computed(() => {
   const configuredName = props.footer.copyright.name.trim()
@@ -107,15 +147,20 @@ const linkRel = (target?: '_self' | '_blank') =>
     </div>
 
     <p class="site-footer__center">
-      <a
-        v-if="showIcp"
-        class="site-footer__record-link"
-        :href="icpUrl"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {{ icpNumber }}
-      </a>
+      <span v-if="showRecords" class="site-footer__record-list">
+        <a
+          v-for="item in recordItems"
+          :key="item.key"
+          class="site-footer__record-link"
+          :href="item.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          :aria-label="item.label"
+        >
+          <AppIcon :name="item.icon" />
+          <span class="site-footer__record-text">{{ item.number }}</span>
+        </a>
+      </span>
       <span v-else>{{ copyrightText }}</span>
     </p>
   </footer>
@@ -216,6 +261,9 @@ const linkRel = (target?: '_self' | '_blank') =>
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
+  display: flex;
+  justify-content: center;
+  max-width: min(42%, 460px);
   white-space: nowrap;
   text-align: center;
   color: var(--color-text-secondary);
@@ -224,13 +272,30 @@ const linkRel = (target?: '_self' | '_blank') =>
   pointer-events: auto;
 }
 
+.site-footer__record-list {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 0.9rem;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
 .site-footer__record-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  max-width: 100%;
   color: inherit;
   text-decoration: none;
   border-bottom: 1px dashed transparent;
   transition:
     color 0.2s ease,
     border-color 0.2s ease;
+}
+
+.site-footer__record-text {
+  min-width: 0;
 }
 
 .site-footer__record-link:hover,
@@ -279,18 +344,25 @@ const linkRel = (target?: '_self' | '_blank') =>
     position: static;
     transform: none;
     width: 100%;
+    max-width: none;
     font-size: 0.8rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 1.4;
+  }
+
+  .site-footer__record-list {
+    width: 100%;
+    row-gap: 0.28rem;
   }
 
   .site-footer__record-link {
-    display: inline-block;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  }
+
+  .site-footer__record-text {
+    white-space: normal;
   }
 }
 

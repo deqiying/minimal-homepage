@@ -1,4 +1,12 @@
-import type { FooterConfig, FooterNavigationItem, SiteConfig, SiteLink, TimelineEntry } from '../types/site-config'
+import type {
+  FooterConfig,
+  FooterIcpConfig,
+  FooterNavigationItem,
+  FooterPoliceConfig,
+  SiteConfig,
+  SiteLink,
+  TimelineEntry,
+} from '../types/site-config'
 import { parseYaml } from './yaml-lite'
 
 const defaultConfig: SiteConfig = {
@@ -33,6 +41,13 @@ const defaultConfig: SiteConfig = {
       enabled: false,
       number: '',
       url: 'https://beian.miit.gov.cn/',
+      icon: 'icp-record',
+    },
+    police: {
+      enabled: false,
+      number: '',
+      url: 'https://beian.gov.cn/',
+      icon: 'police-badge',
     },
     copyright: {
       name: '',
@@ -49,6 +64,9 @@ const cloneFooterConfig = (): FooterConfig => ({
   navigation: [...defaultConfig.footer.navigation],
   icp: {
     ...defaultConfig.footer.icp,
+  },
+  police: {
+    ...defaultConfig.footer.police,
   },
   copyright: {
     ...defaultConfig.footer.copyright,
@@ -188,12 +206,37 @@ const sanitizeFooterNavigationItem = (input: unknown): FooterNavigationItem | nu
   }
 }
 
+const sanitizeFooterRecord = <T extends FooterIcpConfig | FooterPoliceConfig>(input: unknown, fallback: T): T => {
+  const candidate = input && typeof input === 'object' ? (input as Record<string, unknown>) : {}
+
+  const enabled = typeof candidate.enabled === 'boolean' ? candidate.enabled : fallback.enabled
+  const number = typeof candidate.number === 'string' ? candidate.number.trim() : fallback.number
+  const url =
+    typeof candidate.url === 'string' && candidate.url.trim().length > 0 ? candidate.url.trim() : fallback.url
+  const icon =
+    typeof candidate.icon === 'string' && candidate.icon.trim().length > 0 ? candidate.icon.trim() : fallback.icon
+
+  return {
+    ...fallback,
+    enabled,
+    number,
+    url,
+    icon,
+  } as T
+}
+
 const sanitizeFooter = (input: unknown, fallbackName: string): FooterConfig => {
   const fallbackFooter: FooterConfig = {
     ...defaultConfig.footer,
     brand: {
       ...defaultConfig.footer.brand,
       name: fallbackName,
+    },
+    icp: {
+      ...defaultConfig.footer.icp,
+    },
+    police: {
+      ...defaultConfig.footer.police,
     },
     copyright: {
       ...defaultConfig.footer.copyright,
@@ -225,21 +268,8 @@ const sanitizeFooter = (input: unknown, fallbackName: string): FooterConfig => {
         .filter((item): item is FooterNavigationItem => item !== null)
     : defaultConfig.footer.navigation
 
-  const icpRaw = candidate.icp && typeof candidate.icp === 'object'
-    ? (candidate.icp as Record<string, unknown>)
-    : {}
-
-  const icpEnabled = typeof icpRaw.enabled === 'boolean'
-    ? icpRaw.enabled
-    : defaultConfig.footer.icp.enabled
-
-  const icpNumber = typeof icpRaw.number === 'string'
-    ? icpRaw.number.trim()
-    : defaultConfig.footer.icp.number
-
-  const icpUrl = typeof icpRaw.url === 'string' && icpRaw.url.trim().length > 0
-    ? icpRaw.url.trim()
-    : defaultConfig.footer.icp.url
+  const icp = sanitizeFooterRecord(candidate.icp, defaultConfig.footer.icp)
+  const police = sanitizeFooterRecord(candidate.police, defaultConfig.footer.police)
 
   const copyrightRaw = candidate.copyright && typeof candidate.copyright === 'object'
     ? (candidate.copyright as Record<string, unknown>)
@@ -267,11 +297,8 @@ const sanitizeFooter = (input: unknown, fallbackName: string): FooterConfig => {
       icon: brandIcon,
     },
     navigation,
-    icp: {
-      enabled: icpEnabled,
-      number: icpNumber,
-      url: icpUrl,
-    },
+    icp,
+    police,
     copyright: {
       name: copyrightName,
       startYear: normalizedStartYear,
