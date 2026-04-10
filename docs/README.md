@@ -119,11 +119,11 @@ footer 推荐字段：
 - icp.enabled: 是否启用备案号显示。
 - icp.number: 备案号文本。
 - icp.url: 备案号跳转地址（默认工信部地址）。
-- icp.icon: 备案号图标键（默认 `icp-record`）。
+- icp.icon: 备案图标资源名或 AppIcon 图标键（默认 `icp.png`）。
 - police.enabled: 是否启用公安备案显示。
 - police.number: 公安备案号文本。
 - police.url: 公安备案跳转地址（默认 `https://beian.gov.cn/`）。
-- police.icon: 公安备案图标键（默认 `police-badge`）。
+- police.icon: 公安备案图标资源名或 AppIcon 图标键（默认 `police.png`）。
 - copyright.name: 版权名称（未配置时回退 pageTitle）。
 - copyright.startYear: 起始年份（可选）。
 - copyright.dynamicYear: 是否使用动态年份（推荐 true）。

@@ -121,11 +121,11 @@ Recommended fields for footer:
 - icp.enabled: toggle ICP record display.
 - icp.number: ICP record text.
 - icp.url: ICP target URL (defaults to MIIT website).
-- icp.icon: ICP icon key (defaults to `icp-record`).
+- icp.icon: ICP icon asset name in `public/` or AppIcon key (defaults to `icp.png`).
 - police.enabled: toggle public security record display.
 - police.number: public security record text.
 - police.url: public security target URL (defaults to `https://beian.gov.cn/`).
-- police.icon: public security icon key (defaults to `police-badge`).
+- police.icon: public security icon asset name in `public/` or AppIcon key (defaults to `police.png`).
 - copyright.name: copyright holder/web name.
 - copyright.startYear: starting year (optional).
 - copyright.dynamicYear: enable dynamic year rendering.

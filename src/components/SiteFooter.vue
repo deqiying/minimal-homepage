@@ -17,6 +17,7 @@ interface FooterRecordItem {
   number: string
   url: string
   icon: string
+  iconType: 'image' | 'symbol'
 }
 
 const defaultRecordUrls = {
@@ -25,9 +26,11 @@ const defaultRecordUrls = {
 } as const
 
 const defaultRecordIcons = {
-  icp: 'icp-record',
-  police: 'police-badge',
+  icp: 'icp.png',
+  police: 'police.png',
 } as const
+
+const imageIconPattern = /\.(png|jpe?g|gif|webp|svg|ico)(?:[?#].*)?$/i
 
 const updateCompactState = () => {
   isCompact.value = window.scrollY > 72
@@ -71,29 +74,44 @@ const brandName = computed(() => {
 
 const brandIcon = computed(() => props.footer.brand.icon?.trim() ?? '')
 const normalizeText = (value?: string) => value?.trim() ?? ''
+const isImageIcon = (value: string) =>
+  imageIconPattern.test(value) || value.startsWith('/') || value.startsWith('./') || value.startsWith('../')
+
+const resolveIconUrl = (value: string) => {
+  if (/^(https?:)?\/\//i.test(value) || value.startsWith('data:') || value.startsWith('blob:')) {
+    return value
+  }
+
+  const normalizedPath = value.replace(/^\/+/, '')
+  return `${import.meta.env.BASE_URL}${normalizedPath}`
+}
 
 const recordItems = computed<FooterRecordItem[]>(() => {
   const items: FooterRecordItem[] = []
 
   const icpNumber = normalizeText(props.footer.icp.number)
   if (props.footer.icp.enabled && icpNumber.length > 0) {
+    const icpIcon = normalizeText(props.footer.icp.icon) || defaultRecordIcons.icp
     items.push({
       key: 'icp',
       label: 'ICP备案',
       number: icpNumber,
       url: normalizeText(props.footer.icp.url) || defaultRecordUrls.icp,
-      icon: normalizeText(props.footer.icp.icon) || defaultRecordIcons.icp,
+      icon: isImageIcon(icpIcon) ? resolveIconUrl(icpIcon) : icpIcon,
+      iconType: isImageIcon(icpIcon) ? 'image' : 'symbol',
     })
   }
 
   const policeNumber = normalizeText(props.footer.police.number)
   if (props.footer.police.enabled && policeNumber.length > 0) {
+    const policeIcon = normalizeText(props.footer.police.icon) || defaultRecordIcons.police
     items.push({
       key: 'police',
       label: '公安备案',
       number: policeNumber,
       url: normalizeText(props.footer.police.url) || defaultRecordUrls.police,
-      icon: normalizeText(props.footer.police.icon) || defaultRecordIcons.police,
+      icon: isImageIcon(policeIcon) ? resolveIconUrl(policeIcon) : policeIcon,
+      iconType: isImageIcon(policeIcon) ? 'image' : 'symbol',
     })
   }
 
@@ -157,7 +175,14 @@ const linkRel = (target?: '_self' | '_blank') =>
           rel="noopener noreferrer"
           :aria-label="item.label"
         >
-          <AppIcon :name="item.icon" />
+          <img
+            v-if="item.iconType === 'image'"
+            class="site-footer__record-icon-image"
+            :src="item.icon"
+            alt=""
+            aria-hidden="true"
+          />
+          <AppIcon v-else :name="item.icon" />
           <span class="site-footer__record-text">{{ item.number }}</span>
         </a>
       </span>
@@ -296,6 +321,13 @@ const linkRel = (target?: '_self' | '_blank') =>
 
 .site-footer__record-text {
   min-width: 0;
+}
+
+.site-footer__record-icon-image {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  object-fit: contain;
 }
 
 .site-footer__record-link:hover,

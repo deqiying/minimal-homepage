@@ -75,12 +75,12 @@ footer:
     enabled: true
     number: 粤ICP备12345678号-1
     url: https://beian.miit.gov.cn/
-    icon: icp-record
+    icon: icp.png
   police:
     enabled: true
     number: 粤公网安备44030002001234号
     url: https://beian.gov.cn/
-    icon: police-badge
+    icon: police.png
   copyright:
     name: example. All rights reserved.
     startYear: 2023
@@ -91,9 +91,10 @@ footer:
 
 - `timeline` 支持按秒配置时间，页面仅显示到日，最新时间排在最上方。
 - `timeline.content` 推荐使用 YAML 的 `|` 多行块文本。
-- `footer.icp` 与 `footer.police` 都支持 `enabled / number / url / icon`，`icon` 复用内置 `AppIcon` 图标键。
+- `footer.icp` 与 `footer.police` 都支持 `enabled / number / url / icon`，`icon` 可填 `public/` 下图片资源名，或继续复用 `AppIcon` 图标键。
 - 任一备案启用且号码非空时：页脚中间按顺序显示可用备案项，并在文字前展示图标。
 - 两类备案都未启用或号码为空时：页脚中间显示 `© 年份 web_name`，其中 `web_name` 来自 `footer.copyright.name`。
+- 默认示例使用 `icp.png` 与 `police.png` 两个备案图片资源。
 - 年份由原生 `Date` 计算，不需要引入任何第三方插件。
 
 ## 部署说明（静态服务器）

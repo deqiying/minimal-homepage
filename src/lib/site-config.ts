@@ -41,13 +41,13 @@ const defaultConfig: SiteConfig = {
       enabled: false,
       number: '',
       url: 'https://beian.miit.gov.cn/',
-      icon: 'icp-record',
+      icon: 'icp.png',
     },
     police: {
       enabled: false,
       number: '',
       url: 'https://beian.gov.cn/',
-      icon: 'police-badge',
+      icon: 'police.png',
     },
     copyright: {
       name: '',
