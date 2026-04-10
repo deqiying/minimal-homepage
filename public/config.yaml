@@ -1,0 +1,89 @@
+pageTitle: 在线服务
+titleTyping:
+  - 在线服务
+  - My Home Services
+subtitle: 配置驱动的个人主页导航
+
+layout:
+  columns:
+    desktop: 3
+    tablet: 2
+    mobile: 1
+
+typewriter:
+  typeSpeed: 100
+  backSpeed: 60
+  backDelay: 1800
+  startDelay: 250
+  loop: true
+  cursorChar: "_"
+
+timeline:
+  - timestamp: "2026-04-10 13:45:32"
+    content: |
+      上线 **时间线** 首版
+      支持 *多行文案*、`行内代码` 与 ~~删除线~~
+  - timestamp: "2026-04-08 21:18:06"
+    content: |
+      页脚支持 **备案号** 与品牌信息配置
+      继续保持纯静态部署能力
+  - timestamp: "2026-04-05 09:02:44"
+    content: |
+      首页继续采用配置驱动模式
+      导航按钮与时间线内容都可以直接在 YAML 中维护
+
+links:
+  - name: 我的笔记
+    url: https://example.com/notes
+    icon: home
+  - name: 哪吒探针
+    url: https://example.com/probe
+    icon: monitor
+  - name: 简单图床
+    url: https://example.com/image-bed
+    icon: image
+  - name: 我的服务器
+    url: https://example.com/servers
+    icon: server
+  - name: 剩余价值计算器
+    url: https://example.com/calculator
+    icon: calculator
+  - name: NodeSeek 关键词提醒
+    url: https://example.com/nodeseek
+    icon: bot
+  - name: 邮件服务
+    url: https://example.com/mail
+    icon: mail
+  - name: 文件网盘
+    url: https://example.com/drive
+    icon: cloud
+    highlighted: true
+  - name: 在线记事
+    url: https://example.com/notebook
+    icon: notebook
+  - name: 博客访问统计
+    url: https://example.com/stats
+    icon: chart
+
+footer:
+  enabled: true
+  brand:
+    name: My Home Services
+    icon: home
+  navigation:
+    - name: 关于本站
+      url: https://example.com/about
+      icon: notebook
+      target: "_blank"
+    - name: 联系我
+      url: https://example.com/contact
+      icon: mail
+      target: "_blank"
+  icp:
+    enabled: true
+    number: 粤ICP备12345678号-1
+    url: https://beian.miit.gov.cn/
+  copyright:
+    name: example. All rights reserved.
+    startYear: 2023
+    dynamicYear: true

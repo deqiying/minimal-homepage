@@ -3,7 +3,7 @@
 ## 1. 项目目标
 
 本项目是一个纯前端个人主页导航站。
-所有跳转入口由 `public/config.json` 配置驱动生成，不依赖后端接口。
+所有跳转入口和时间线内容由 `public/config.yaml` 配置驱动生成，不依赖后端接口。
 
 ## 2. 技术栈约束
 
@@ -24,7 +24,7 @@
 ```text
 HomePage/
 ├── public/
-│   └── config.json           # 站点配置（运行时读取）
+│   └── config.yaml           # 站点配置（运行时读取）
 ├── src/
 │   ├── components/           # 组件目录
 │   ├── lib/                  # 业务工具和配置加载
@@ -39,14 +39,20 @@ HomePage/
 
 ## 4. 配置文件规范
 
-`public/config.json` 必须满足：
+`public/config.yaml` 必须满足：
 
 - `pageTitle`: string
 - `titleTyping`: string[]
 - `subtitle`: string
 - `layout.columns.desktop/tablet/mobile`: number
 - `typewriter`: object
+- `timeline`: array
 - `links`: array
+
+`timeline` 每项建议字段：
+
+- `timestamp`: 时间字符串（必填，建议始终加引号）
+- `content`: 文案内容（必填，推荐使用 YAML `|` 多行块文本）
 
 `links` 每项建议字段：
 
@@ -60,6 +66,8 @@ HomePage/
 
 - `App.vue`: 页面编排，不写复杂业务逻辑。
 - `TypewriterTitle.vue`: 只负责标题动效和降级。
+- `TimelineSection.vue`: 只负责时间线布局和渲染。
+- `InlineRichText.vue`: 只负责时间线文案轻量格式渲染。
 - `LinkGrid.vue`: 只负责网格布局。
 - `LinkCard.vue`: 只负责单卡片渲染与跳转交互。
 - `AppIcon.vue`: 只负责图标渲染。
@@ -90,6 +98,7 @@ HomePage/
 
 并手动检查：
 
+- 配置改动后时间线是否正确排序、日期是否仅显示到日
 - 配置改动后按钮是否正确渲染
 - 打字机效果是否正常
 - 移动端布局是否不溢出

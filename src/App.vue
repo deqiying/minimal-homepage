@@ -2,31 +2,35 @@
 import { onMounted, ref } from 'vue'
 import LinkGrid from './components/LinkGrid.vue'
 import SiteFooter from './components/SiteFooter.vue'
+import TimelineSection from './components/TimelineSection.vue'
 import TypewriterTitle from './components/TypewriterTitle.vue'
-import { loadSiteConfig } from './lib/site-config'
+import { createDefaultSiteConfig, loadSiteConfig } from './lib/site-config'
 import type { SiteConfig } from './types/site-config'
 
-const config = ref<SiteConfig | null>(null)
+const config = ref<SiteConfig>(createDefaultSiteConfig())
 const loading = ref(true)
 
+const updateDocumentTitle = (pageTitle: string) => {
+  const normalizedTitle = pageTitle.trim()
+  if (normalizedTitle.length > 0) {
+    document.title = normalizedTitle
+  }
+}
+
 onMounted(async () => {
+  updateDocumentTitle(config.value.pageTitle)
+
   const loadedConfig = await loadSiteConfig()
   config.value = loadedConfig
-
-  const pageTitle = loadedConfig.pageTitle.trim()
-  if (pageTitle.length > 0) {
-    document.title = pageTitle
-  }
-
+  updateDocumentTitle(loadedConfig.pageTitle)
   loading.value = false
 })
 </script>
 
 <template>
-  <main class="page-shell" :class="{ 'has-floating-footer': Boolean(config?.footer.enabled) }">
+  <main class="page-shell" :class="{ 'has-floating-footer': !loading && Boolean(config.footer.enabled) }">
     <section class="hero">
       <TypewriterTitle
-        v-if="config"
         :strings="config.titleTyping"
         :type-speed="config.typewriter.typeSpeed"
         :back-speed="config.typewriter.backSpeed"
@@ -35,19 +39,32 @@ onMounted(async () => {
         :loop="config.typewriter.loop"
         :cursor-char="config.typewriter.cursorChar"
       />
-      <p v-if="config?.subtitle" class="hero__subtitle">{{ config.subtitle }}</p>
+      <p v-if="config.subtitle" class="hero__subtitle">{{ config.subtitle }}</p>
     </section>
 
-    <p v-if="loading" class="state-tip">正在读取 config.json ...</p>
+    <section v-if="loading" class="loading-stage" aria-live="polite">
+      <div class="loading-stage__panel">
+        <p class="loading-stage__eyebrow">LOADING</p>
+        <p class="loading-stage__title">正在加载页面配置</p>
+        <p class="loading-stage__tip">正在读取 `config.yaml`，页面内容稍后就绪。</p>
+      </div>
+    </section>
 
-    <p v-else-if="config && config.links.length === 0" class="state-tip">
-      当前没有可展示的站点，请在 public/config.json 中补充 links。
-    </p>
+    <TimelineSection
+      v-else-if="config.timeline.length > 0"
+      class="page-section"
+      :entries="config.timeline"
+    />
 
-    <LinkGrid v-else-if="config" :links="config.links" :columns="config.layout.columns" />
+    <LinkGrid
+      v-if="!loading && config.links.length > 0"
+      class="page-section page-section--links"
+      :links="config.links"
+      :columns="config.layout.columns"
+    />
 
     <SiteFooter
-      v-if="config && config.footer.enabled"
+      v-if="!loading && config.footer.enabled"
       :footer="config.footer"
       :page-title="config.pageTitle"
     />
@@ -70,19 +87,57 @@ onMounted(async () => {
   margin-bottom: clamp(1.55rem, 2.4vw, 2.3rem);
 }
 
+.loading-stage {
+  min-height: clamp(18rem, 46vh, 28rem);
+  display: grid;
+  place-items: center;
+}
+
+.loading-stage__panel {
+  width: min(420px, 100%);
+  padding: clamp(1.2rem, 3vw, 1.65rem) clamp(1.15rem, 3vw, 1.55rem);
+  border: 1px solid color-mix(in srgb, var(--color-card-border) 90%, white 10%);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(145deg, rgb(20 27 40 / 0.88), rgb(20 27 40 / 0.68)),
+    linear-gradient(180deg, rgb(121 199 255 / 0.08), transparent 48%);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.loading-stage__eyebrow {
+  margin: 0;
+  color: color-mix(in srgb, var(--color-accent) 75%, white 25%);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+}
+
+.loading-stage__title {
+  margin: 0.75rem 0 0;
+  color: var(--color-text-primary);
+  font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+  font-weight: 700;
+}
+
+.loading-stage__tip {
+  margin: 0.6rem 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.page-section + .page-section {
+  margin-top: clamp(1.55rem, 2.8vw, 2.2rem);
+}
+
 .hero__subtitle {
   margin: 0.95rem 0 0;
   font-size: clamp(1rem, 1.35vw, 1.35rem);
   color: var(--color-text-secondary);
   font-weight: 500;
   letter-spacing: 0.015em;
-}
-
-.state-tip {
-  margin-top: 1rem;
-  font-size: 1.02rem;
-  color: var(--color-text-secondary);
-  font-weight: 500;
 }
 
 @media (max-width: 960px) {

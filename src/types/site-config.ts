@@ -25,6 +25,12 @@ export interface SiteLink {
   highlighted?: boolean
 }
 
+export interface TimelineEntry {
+  timestamp: string
+  displayDate: string
+  content: string
+}
+
 export interface FooterBrandConfig {
   name?: string
   icon?: string
@@ -63,6 +69,7 @@ export interface SiteConfig {
   subtitle?: string
   layout: GridLayoutConfig
   typewriter: TypewriterConfig
+  timeline: TimelineEntry[]
   links: SiteLink[]
   footer: FooterConfig
 }

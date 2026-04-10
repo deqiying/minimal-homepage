@@ -2,11 +2,12 @@
 
 一个配置驱动的极简个人主页项目。
 
-它是单页前端站点，支持通过配置文件生成导航按钮，默认黑暗风视觉，标题支持打字机效果，构建产物为纯静态文件，可直接部署到 Nginx 或其他静态托管服务。
+它是单页前端站点，支持通过配置文件生成导航按钮和纵向时间线，默认黑暗风视觉，标题支持打字机效果，构建产物为纯静态文件，可直接部署到 Nginx 或其他静态托管服务。
 
 ## 特性
 
-- 配置驱动：通过 public/config.json 管理页面文案和跳转入口。
+- 配置驱动：通过 public/config.yaml 管理页面文案、时间线和跳转入口。
+- 多行内容友好：时间线内容支持 YAML 块文本书写，更适合持续维护。
 - 页脚配置化：支持网站图标、Footer navigation、备案号与版权文案切换。
 - 单页极简：聚焦个人主页导航，不依赖后端接口。
 - 响应式布局：支持桌面端、平板端、移动端。
@@ -32,7 +33,7 @@ minimal-homepage/
 │   ├── README.en.md
 │   └── repo-description.md
 ├── public/
-│   └── config.json
+│   └── config.yaml
 ├── src/
 │   ├── components/
 │   ├── lib/
@@ -84,15 +85,22 @@ pnpm preview
 
 ## 配置文件
 
-主配置文件为 public/config.json，核心字段如下：
+主配置文件为 public/config.yaml，核心字段如下：
 
 - pageTitle: 页面标题。
 - titleTyping: 标题打字机文案数组。
 - subtitle: 副标题。
 - layout.columns.desktop/tablet/mobile: 不同端的网格列数。
 - typewriter: 打字机参数（速度、延迟、循环等）。
+- timeline: 时间线数组。
 - links: 导航按钮数组。
 - footer: 页脚配置（图标、导航、备案号、版权）。
+
+timeline 每项推荐字段：
+
+- timestamp: 时间字符串（建议带秒，并始终加引号）。
+- content: 时间线文案（推荐使用 `|` 多行块文本）。
+- 页面显示时仅输出 `YYYY-MM-DD`，排序使用完整时间。
 
 links 每项建议字段：
 
@@ -114,6 +122,14 @@ footer 推荐字段：
 - copyright.name: 版权名称（未配置时回退 pageTitle）。
 - copyright.startYear: 起始年份（可选）。
 - copyright.dynamicYear: 是否使用动态年份（推荐 true）。
+
+轻量格式语法：
+
+- `**加粗**`
+- `*斜体*`
+- `~~删除线~~`
+- `` `行内代码` ``
+- 换行
 
 页脚中间文案规则：
 
@@ -143,7 +159,7 @@ footer 推荐字段：
 
 ### 修改站点入口要改代码吗？
 
-通常不需要。新增、删除、调整跳转入口优先修改 public/config.json。
+通常不需要。新增、删除、调整时间线或跳转入口优先修改 public/config.yaml。
 
 ## 文档
 

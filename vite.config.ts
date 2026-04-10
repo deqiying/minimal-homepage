@@ -6,27 +6,28 @@ import vue from '@vitejs/plugin-vue'
 const preserveDistConfigPlugin = (): Plugin => {
   let resolvedConfig: ResolvedConfig
   let previousConfigContent: string | null = null
+  const configFileName = 'config.yaml'
 
   return {
     name: 'preserve-dist-config',
     apply: 'build',
     configResolved(config) {
       resolvedConfig = config
-      const distConfigPath = resolve(config.root, config.build.outDir, 'config.json')
+      const distConfigPath = resolve(config.root, config.build.outDir, configFileName)
       if (existsSync(distConfigPath)) {
         previousConfigContent = readFileSync(distConfigPath, 'utf8')
       }
     },
     closeBundle() {
       const distDir = resolve(resolvedConfig.root, resolvedConfig.build.outDir)
-      const distConfigPath = resolve(distDir, 'config.json')
+      const distConfigPath = resolve(distDir, configFileName)
 
       if (previousConfigContent !== null) {
         writeFileSync(distConfigPath, previousConfigContent, 'utf8')
         return
       }
 
-      const sourceConfigPath = resolve(resolvedConfig.root, 'public', 'config.json')
+      const sourceConfigPath = resolve(resolvedConfig.root, 'public', configFileName)
       if (!existsSync(distConfigPath) && existsSync(sourceConfigPath)) {
         copyFileSync(sourceConfigPath, distConfigPath)
       }

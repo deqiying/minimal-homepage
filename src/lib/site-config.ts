@@ -1,4 +1,5 @@
-import type { FooterConfig, FooterNavigationItem, SiteConfig, SiteLink } from '../types/site-config'
+import type { FooterConfig, FooterNavigationItem, SiteConfig, SiteLink, TimelineEntry } from '../types/site-config'
+import { parseYaml } from './yaml-lite'
 
 const defaultConfig: SiteConfig = {
   pageTitle: '在线服务',
@@ -19,6 +20,7 @@ const defaultConfig: SiteConfig = {
     loop: true,
     cursorChar: '_',
   },
+  timeline: [],
   links: [],
   footer: {
     enabled: true,
@@ -37,6 +39,103 @@ const defaultConfig: SiteConfig = {
       dynamicYear: true,
     },
   },
+}
+
+const cloneFooterConfig = (): FooterConfig => ({
+  enabled: defaultConfig.footer.enabled,
+  brand: {
+    ...defaultConfig.footer.brand,
+  },
+  navigation: [...defaultConfig.footer.navigation],
+  icp: {
+    ...defaultConfig.footer.icp,
+  },
+  copyright: {
+    ...defaultConfig.footer.copyright,
+  },
+})
+
+export const createDefaultSiteConfig = (): SiteConfig => ({
+  pageTitle: defaultConfig.pageTitle,
+  titleTyping: [...defaultConfig.titleTyping],
+  subtitle: defaultConfig.subtitle,
+  layout: {
+    columns: {
+      ...defaultConfig.layout.columns,
+    },
+  },
+  typewriter: {
+    ...defaultConfig.typewriter,
+  },
+  timeline: [],
+  links: [],
+  footer: cloneFooterConfig(),
+})
+
+const normalizeTimelineDate = (timestamp: string) => {
+  const normalizedTimestamp = timestamp.trim()
+  const parts = normalizedTimestamp.match(
+    /^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2})(?::(\d{2}))?)?$/,
+  )
+
+  if (parts) {
+    const year = Number(parts[1])
+    const month = Number(parts[2])
+    const day = Number(parts[3])
+    const hours = Number(parts[4] ?? '0')
+    const minutes = Number(parts[5] ?? '0')
+    const seconds = Number(parts[6] ?? '0')
+
+    const date = new Date(year, month - 1, day, hours, minutes, seconds)
+    if (!Number.isNaN(date.getTime())) {
+      return {
+        sortValue: date.getTime(),
+        displayDate: `${parts[1]}-${parts[2]}-${parts[3]}`,
+      }
+    }
+  }
+
+  const fallbackDate = new Date(normalizedTimestamp)
+  if (Number.isNaN(fallbackDate.getTime())) {
+    return null
+  }
+
+  const displayDate = [
+    String(fallbackDate.getFullYear()).padStart(4, '0'),
+    String(fallbackDate.getMonth() + 1).padStart(2, '0'),
+    String(fallbackDate.getDate()).padStart(2, '0'),
+  ].join('-')
+
+  return {
+    sortValue: fallbackDate.getTime(),
+    displayDate,
+  }
+}
+
+const sanitizeTimelineEntry = (input: unknown): (TimelineEntry & { sortValue: number }) | null => {
+  if (!input || typeof input !== 'object') {
+    return null
+  }
+
+  const candidate = input as Record<string, unknown>
+  const timestamp = typeof candidate.timestamp === 'string' ? candidate.timestamp.trim() : ''
+  const content = typeof candidate.content === 'string' ? candidate.content.replace(/\r\n?/g, '\n').trim() : ''
+
+  if (!timestamp || !content) {
+    return null
+  }
+
+  const normalizedDate = normalizeTimelineDate(timestamp)
+  if (!normalizedDate) {
+    return null
+  }
+
+  return {
+    timestamp,
+    displayDate: normalizedDate.displayDate,
+    content,
+    sortValue: normalizedDate.sortValue,
+  }
 }
 
 const sanitizeLink = (input: unknown): SiteLink | null => {
@@ -183,10 +282,17 @@ const sanitizeFooter = (input: unknown, fallbackName: string): FooterConfig => {
 
 const sanitizeConfig = (input: unknown): SiteConfig => {
   if (!input || typeof input !== 'object') {
-    return defaultConfig
+    return createDefaultSiteConfig()
   }
 
   const candidate = input as Record<string, unknown>
+  const timeline = Array.isArray(candidate.timeline)
+    ? candidate.timeline
+        .map(sanitizeTimelineEntry)
+        .filter((item): item is TimelineEntry & { sortValue: number } => item !== null)
+        .sort((left, right) => right.sortValue - left.sortValue)
+        .map(({ sortValue: _sortValue, ...item }) => item)
+    : []
   const links = Array.isArray(candidate.links)
     ? candidate.links.map(sanitizeLink).filter((item): item is SiteLink => item !== null)
     : []
@@ -245,21 +351,30 @@ const sanitizeConfig = (input: unknown): SiteConfig => {
           ? typewriterRaw.cursorChar
           : defaultConfig.typewriter.cursorChar,
     },
+    timeline,
     links,
     footer,
   }
 }
 
+const warnConfigIssue = (message: string, error?: unknown) => {
+  if (import.meta.env.DEV) {
+    console.warn(`[site-config] ${message}`, error)
+  }
+}
+
 export const loadSiteConfig = async (): Promise<SiteConfig> => {
   try {
-    const response = await fetch(import.meta.env.BASE_URL + 'config.json', { cache: 'no-store' })
+    const response = await fetch(import.meta.env.BASE_URL + 'config.yaml', { cache: 'no-store' })
     if (!response.ok) {
-      return defaultConfig
+      warnConfigIssue('Failed to fetch public/config.yaml, falling back to default config.')
+      return createDefaultSiteConfig()
     }
 
-    const payload = (await response.json()) as unknown
+    const payload = parseYaml(await response.text()) as unknown
     return sanitizeConfig(payload)
-  } catch {
-    return defaultConfig
+  } catch (error) {
+    warnConfigIssue('Failed to parse public/config.yaml, falling back to default config.', error)
+    return createDefaultSiteConfig()
   }
 }

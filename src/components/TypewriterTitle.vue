@@ -93,14 +93,16 @@ onBeforeUnmount(() => {
 .typewriter-title {
   margin: 0;
   font-family: var(--font-title);
-  font-size: clamp(2.25rem, 5vw, 4.2rem);
-  line-height: 1.04;
-  letter-spacing: 0.02em;
+  font-size: clamp(2.3rem, 5vw, 4.05rem);
+  line-height: 1.06;
+  letter-spacing: 0.015em;
+  font-weight: 400;
   color: var(--color-text-primary);
   text-shadow:
-    0 0 1px rgb(255 255 255 / 0.75),
-    0 0 22px rgb(126 207 255 / 0.3);
-  text-transform: uppercase;
+    0 1px 0 rgb(255 255 255 / 0.12),
+    0 0 10px rgb(126 207 255 / 0.14);
   text-wrap: balance;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: auto;
 }
 </style>

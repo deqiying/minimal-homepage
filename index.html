@@ -4,14 +4,109 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
-    <title>minimal-homepage</title>
+    <title>在线服务</title>
     <meta
       name="description"
       content="配置驱动的个人主页导航，支持打字机标题效果与静态部署。"
     />
+    <style>
+      :root {
+        --boot-bg: #0f131c;
+        --boot-text: #f4f7ff;
+        --boot-text-secondary: #a8b5d2;
+        --boot-accent: #79c7ff;
+        --boot-border: rgb(151 170 205 / 0.3);
+        --boot-card: rgb(20 27 40 / 0.78);
+      }
+
+      html,
+      body,
+      #app {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        color: var(--boot-text);
+        font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        background:
+          radial-gradient(circle at 13% -28%, rgb(136 229 255 / 0.38), transparent 36%),
+          radial-gradient(circle at 84% -30%, rgb(129 116 255 / 0.2), transparent 34%),
+          linear-gradient(180deg, #0b1019 0%, #131a26 32%, #141c2a 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0 0 auto;
+        height: clamp(88px, 16vw, 138px);
+        background: linear-gradient(180deg, rgb(89 218 255 / 0.54) 0%, rgb(76 158 250 / 0.24) 45%, transparent 100%);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .boot-shell {
+        width: min(1220px, 92vw);
+        margin: 0 auto;
+        padding: clamp(2.4rem, 5vw, 4.1rem) 0 clamp(2.3rem, 5vw, 4.5rem);
+      }
+
+      .boot-loading {
+        min-height: min(100vh - clamp(4.7rem, 10vw, 6.6rem), 34rem);
+        display: grid;
+        place-items: center;
+      }
+
+      .boot-loading__panel {
+        width: min(420px, 100%);
+        padding: clamp(1.2rem, 3vw, 1.65rem) clamp(1.15rem, 3vw, 1.55rem);
+        border: 1px solid color-mix(in srgb, var(--boot-border) 90%, white 10%);
+        border-radius: 16px;
+        background:
+          linear-gradient(145deg, rgb(20 27 40 / 0.88), rgb(20 27 40 / 0.68)),
+          linear-gradient(180deg, rgb(121 199 255 / 0.08), transparent 48%);
+        box-shadow: 0 14px 28px rgb(4 8 20 / 0.28);
+        text-align: center;
+        backdrop-filter: blur(10px);
+      }
+
+      .boot-loading__eyebrow {
+        margin: 0;
+        color: color-mix(in srgb, var(--boot-accent) 75%, white 25%);
+        font-size: 0.78rem;
+        letter-spacing: 0.22em;
+        font-weight: 700;
+      }
+
+      .boot-loading__title {
+        margin: 0.75rem 0 0;
+        color: var(--boot-text);
+        font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+        font-weight: 700;
+      }
+
+      .boot-loading__tip {
+        margin: 0.6rem 0 0;
+        color: var(--boot-text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.65;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="boot-shell">
+        <div class="boot-loading" aria-live="polite">
+          <div class="boot-loading__panel">
+            <p class="boot-loading__eyebrow">LOADING</p>
+            <p class="boot-loading__title">正在加载页面配置</p>
+            <p class="boot-loading__tip">正在读取 `config.yaml`，页面内容稍后就绪。</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

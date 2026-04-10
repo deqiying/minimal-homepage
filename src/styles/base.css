@@ -44,7 +44,7 @@ a {
   font-family: var(--font-title);
   font-size: 0.9em;
   color: color-mix(in srgb, var(--color-accent) 92%, white);
-  text-shadow: 0 0 14px rgb(121 199 255 / 0.65);
+  text-shadow: 0 0 8px rgb(121 199 255 / 0.32);
   animation: cursor-blink 0.95s steps(2, start) infinite;
 }
 

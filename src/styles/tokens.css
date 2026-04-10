@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Press+Start+2P&family=ZCOOL+QingKe+HuangYou&display=swap');
 
 :root {
-  --font-title: 'Press Start 2P', 'ZCOOL QingKe HuangYou', 'Noto Sans SC', monospace;
+  --font-title: 'ZCOOL QingKe HuangYou', 'Noto Sans SC', 'Press Start 2P', sans-serif;
   --font-body: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
   --color-page-bg: #0f131c;
@@ -12,6 +12,7 @@
   --color-card-border: rgb(151 170 205 / 0.3);
   --color-icon: #edf3ff;
   --color-accent: #79c7ff;
+  --color-code-bg: rgb(9 14 24 / 0.74);
 
   --radius-card: 16px;
   --shadow-card: 0 14px 28px rgb(4 8 20 / 0.28);

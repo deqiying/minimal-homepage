@@ -2,11 +2,12 @@
 
 A config-driven minimal personal homepage project.
 
-This is a single-page frontend site that generates navigation cards from a JSON config, ships with a dark visual style by default, includes a typewriter title effect, and builds to pure static assets for easy deployment.
+This is a single-page frontend site that generates navigation cards and a vertical timeline from a YAML config, ships with a dark visual style by default, includes a typewriter title effect, and builds to pure static assets for easy deployment.
 
 ## Features
 
-- Config-driven: manage title text and links in public/config.json.
+- Config-driven: manage title text, timeline entries, and links in public/config.yaml.
+- Better multiline authoring: timeline content uses YAML block text for easier editing.
 - Configurable footer: supports brand icon, footer navigation, ICP record switch, and copyright text.
 - Minimal single-page architecture: no backend APIs required.
 - Responsive layout: desktop, tablet, and mobile ready.
@@ -32,7 +33,7 @@ minimal-homepage/
 │   ├── README.en.md
 │   └── repo-description.md
 ├── public/
-│   └── config.json
+│   └── config.yaml
 ├── src/
 │   ├── components/
 │   ├── lib/
@@ -84,7 +85,7 @@ Important: access the built app via HTTP. Opening dist/index.html with file:// m
 
 ## Configuration
 
-Main config file: public/config.json.
+Main config file: public/config.yaml.
 
 Key fields:
 
@@ -93,8 +94,15 @@ Key fields:
 - subtitle: subtitle text.
 - layout.columns.desktop/tablet/mobile: responsive grid columns.
 - typewriter: typing behavior options.
+- timeline: timeline entry list.
 - links: list of navigation items.
 - footer: footer settings (brand, navigation, ICP record, copyright).
+
+Recommended fields for each timeline item:
+
+- timestamp: quoted datetime string, ideally with second-level precision.
+- content: timeline copy, preferably using YAML block text with `|`.
+- UI shows only `YYYY-MM-DD`, while sorting keeps the full timestamp.
 
 Recommended fields for each link item:
 
@@ -116,6 +124,14 @@ Recommended fields for footer:
 - copyright.name: copyright holder/web name.
 - copyright.startYear: starting year (optional).
 - copyright.dynamicYear: enable dynamic year rendering.
+
+Supported lightweight formatting:
+
+- `**bold**`
+- `*italic*`
+- `~~strikethrough~~`
+- `` `inline code` ``
+- line breaks
 
 Center text behavior:
 
@@ -145,7 +161,7 @@ Because file:// has stricter loading behavior for module assets. Use pnpm previe
 
 ### Do I need to change source code when adding links?
 
-Usually no. Update public/config.json first.
+Usually no. Update public/config.yaml first.
 
 ## Docs
 
