@@ -83,7 +83,7 @@ pnpm preview
 ~~~
 
 Important: access the built app via HTTP. Opening dist/index.html with file:// may result in a blank page.
-Note: `pnpm preview` serves the built `dist/` output. The current build flow preserves an existing `dist/config.yaml`, so local preview will keep reading that file when it already exists.
+Note: `pnpm preview` serves the built `dist/` output. The current build flow preserves an existing `dist/config.yaml`, so local preview will keep reading that file when it already exists. Production builds also emit a stable `asset-manifest.json` so the app shell can locate the latest hashed entry assets under aggressive caching.
 
 ## Configuration
 
@@ -161,6 +161,10 @@ Center text behavior:
 - No pnpm dev in production.
 - No long-running Node.js process required.
 - Only a static HTTP server is needed.
+- `dist/index.html` now acts as a stable app shell and no longer hardcodes hashed JS/CSS tags.
+- The shell fetches `asset-manifest.json` at runtime, then loads the current hashed entry assets to reduce blank pages caused by stale cached HTML.
+- `dist/config.yaml` still follows the existing preserve behavior; if deployed content looks stale, check whether that file is still an older copy.
+- A short cache lifetime for `index.html` is still recommended, but the page should no longer fail immediately when an older HTML shell is cached.
 
 ## FAQ
 

@@ -73,6 +73,15 @@
         backdrop-filter: blur(10px);
       }
 
+      .boot-loading__panel--error {
+        border-color: rgb(255 150 150 / 0.45);
+        box-shadow: 0 16px 32px rgb(58 8 12 / 0.28);
+      }
+
+      .boot-loading__panel--error .boot-loading__eyebrow {
+        color: rgb(255 194 194 / 0.96);
+      }
+
       .boot-loading__eyebrow {
         margin: 0;
         color: color-mix(in srgb, var(--boot-accent) 75%, white 25%);
@@ -100,10 +109,10 @@
     <div id="app">
       <div class="boot-shell">
         <div class="boot-loading" aria-live="polite">
-          <div class="boot-loading__panel">
-            <p class="boot-loading__eyebrow">LOADING</p>
-            <p class="boot-loading__title">正在加载页面</p>
-            <p class="boot-loading__tip">页面内容即将就绪，请稍候。</p>
+          <div class="boot-loading__panel" data-boot-panel>
+            <p class="boot-loading__eyebrow" data-boot-eyebrow>LOADING</p>
+            <p class="boot-loading__title" data-boot-title>正在加载页面</p>
+            <p class="boot-loading__tip" data-boot-tip>页面内容即将就绪，请稍候。</p>
           </div>
         </div>
       </div>

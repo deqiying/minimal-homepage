@@ -408,14 +408,32 @@ const sanitizeConfig = (input: unknown): SiteConfig => {
 }
 
 const warnConfigIssue = (message: string, error?: unknown) => {
-  if (import.meta.env.DEV) {
-    console.warn(`[site-config] ${message}`, error)
+  console.warn(`[site-config] ${message}`, error)
+}
+
+const resolveRuntimeUrl = (value: string) => {
+  try {
+    return new URL(value, document.baseURI || window.location.href)
+  } catch {
+    return null
   }
+}
+
+const createNoCacheRequestUrl = (value: string) => {
+  const resolvedUrl = resolveRuntimeUrl(value)
+
+  if (!resolvedUrl) {
+    return value
+  }
+
+  resolvedUrl.searchParams.set('t', `${Date.now()}`)
+  return resolvedUrl.toString()
 }
 
 export const loadSiteConfig = async (): Promise<SiteConfig> => {
   try {
-    const response = await fetch(import.meta.env.BASE_URL + 'config.yaml', { cache: 'no-store' })
+    const configUrl = createNoCacheRequestUrl(`${import.meta.env.BASE_URL}config.yaml`)
+    const response = await fetch(configUrl, { cache: 'no-store' })
     if (!response.ok) {
       warnConfigIssue('Failed to fetch public/config.yaml, falling back to default config.')
       return createDefaultSiteConfig()

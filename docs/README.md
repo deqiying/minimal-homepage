@@ -83,7 +83,7 @@ pnpm preview
 ~~~
 
 注意：请通过 HTTP 服务访问构建产物。直接使用 file:// 打开 dist/index.html 可能导致空白页。
-补充：`pnpm preview` 展示的是 `dist/` 构建产物；当前构建流程会保留已存在的 `dist/config.yaml`，因此本地预览默认优先读取该文件内容。
+补充：`pnpm preview` 展示的是 `dist/` 构建产物；当前构建流程会保留已存在的 `dist/config.yaml`，因此本地预览默认优先读取该文件内容。生产构建还会生成稳定的 `asset-manifest.json`，用于在强缓存场景下定位最新入口资源。
 
 ## 配置文件
 
@@ -159,6 +159,10 @@ footer 推荐字段：
 - 生产环境无需运行 pnpm dev。
 - 生产环境无需 Node.js 常驻进程。
 - 只需要可提供静态文件的 HTTP 服务。
+- `dist/index.html` 为稳定页面壳，运行时会先读取 `asset-manifest.json`，再加载当前版本的 hash JS/CSS。
+- 该设计可缓解旧 `index.html` 被缓存后继续引用失效资源导致的白屏问题。
+- `dist/config.yaml` 仍保持当前保留策略；若内容未更新，优先检查该文件是否仍是旧副本。
+- 仍建议服务器对 `index.html` 设置较短缓存，但即使缓存策略暂未调整，页面也不应再直接依赖旧 hash 资源启动。
 
 ## 常见问题
 

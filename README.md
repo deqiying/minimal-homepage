@@ -50,7 +50,7 @@ pnpm preview
 ```
 
 注意：请通过 HTTP 访问构建产物，不建议直接用 `file://` 打开 `dist/index.html`。
-补充：`pnpm preview` 读取的是 `dist/` 构建产物；当前构建流程会保留已存在的 `dist/config.yaml`，所以本地预览优先看到的是该文件内容。
+补充：`pnpm preview` 读取的是 `dist/` 构建产物；当前构建流程会保留已存在的 `dist/config.yaml`，所以本地预览优先看到的是该文件内容。生产构建还会生成稳定的 `asset-manifest.json`，用于让页面壳在强缓存场景下定位最新 hash 资源。
 
 ## Footer 配置（ICP备案/公安备案/版权/导航）
 
@@ -109,6 +109,13 @@ footer:
 1. 执行 `pnpm build`。
 2. 上传 `dist/` 到服务器。
 3. 使用 Nginx（或任意静态服务器）托管 `dist/`。
+
+补充说明：
+
+- `dist/index.html` 现在是稳定页面壳，不再直接写死 hash JS/CSS。
+- 页面启动时会先请求 `asset-manifest.json`，再加载当前版本入口资源，以缓解旧 `index.html` 缓存导致的 `assets/*.js`、`assets/*.css` 404。
+- `dist/config.yaml` 仍保持现有保留策略；若预览内容未更新，优先检查该文件是否仍是旧配置。
+- 仍建议服务器对 `index.html` 采用较短缓存策略，但即使缓存未及时更新，页面也不应再因为旧 hash 资源失效而直接白屏。
 
 ## 文档导航
 
