@@ -83,6 +83,12 @@ const iconName = computed(() => props.name?.toLowerCase() ?? '')
       <path d="m7.5 15.5 3-3 2.5 2 4-5" />
     </template>
 
+    <template v-else-if="iconName === 'smile'">
+      <circle cx="12" cy="12" r="7.2" />
+      <path d="M9 10h.01M15 10h.01" />
+      <path d="M8.4 13.2c.85 1.8 2.15 2.8 3.6 2.8s2.75-1 3.6-2.8" />
+    </template>
+
     <template v-else-if="iconName === 'icp-record'">
       <rect x="4.5" y="3.5" width="15" height="17" rx="2" />
       <path d="M8 8h8M8 11.5h5" />

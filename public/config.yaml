@@ -3,6 +3,8 @@ titleTyping:
   - 在线服务
   - My Home Services
 subtitle: 配置驱动的个人主页导航
+siteIcon:
+  favicon: favicon-smile.svg
 
 layout:
   columns:

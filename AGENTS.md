@@ -49,6 +49,10 @@ HomePage/
 - `timeline`: array
 - `links`: array
 
+`public/config.yaml` 可选扩展字段：
+
+- `siteIcon.favicon`: 浏览器标签页 favicon 资源路径（可选，默认回退 `public/favicon.svg`）
+
 `timeline` 每项建议字段：
 
 - `timestamp`: 时间字符串（必填，建议始终加引号）

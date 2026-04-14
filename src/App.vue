@@ -17,13 +17,68 @@ const updateDocumentTitle = (pageTitle: string) => {
   }
 }
 
+const resolveDocumentUrl = (value: string) => {
+  try {
+    return new URL(value, document.baseURI || window.location.href).toString()
+  } catch {
+    return ''
+  }
+}
+
+const getDefaultFaviconHref = () => {
+  const existingFaviconHref = document.querySelector<HTMLLinkElement>('link[rel="icon"]')?.getAttribute('href')?.trim()
+  return resolveDocumentUrl(existingFaviconHref || 'favicon.svg') || 'favicon.svg'
+}
+
+const resolveFaviconHref = (favicon?: string) => {
+  const fallbackHref = getDefaultFaviconHref()
+  const normalizedFavicon = favicon?.trim() ?? ''
+
+  if (!normalizedFavicon) {
+    return fallbackHref
+  }
+
+  if (
+    /^(https?:)?\/\//i.test(normalizedFavicon) ||
+    normalizedFavicon.startsWith('data:') ||
+    normalizedFavicon.startsWith('blob:')
+  ) {
+    return normalizedFavicon
+  }
+
+  if (/^[a-z]+:/i.test(normalizedFavicon)) {
+    return fallbackHref
+  }
+
+  return resolveDocumentUrl(normalizedFavicon) || fallbackHref
+}
+
+const updateDocumentFavicon = (favicon?: string) => {
+  const faviconHref = resolveFaviconHref(favicon)
+  let faviconLink = document.querySelector<HTMLLinkElement>('link[rel="icon"]')
+
+  if (!faviconLink) {
+    faviconLink = document.createElement('link')
+    faviconLink.rel = 'icon'
+    faviconLink.type = 'image/svg+xml'
+    document.head.appendChild(faviconLink)
+  }
+
+  faviconLink.href = faviconHref
+}
+
+const updateDocumentMeta = (siteConfig: SiteConfig) => {
+  updateDocumentTitle(siteConfig.pageTitle)
+  updateDocumentFavicon(siteConfig.siteIcon?.favicon)
+}
+
 onMounted(async () => {
-  updateDocumentTitle(config.value.pageTitle)
+  updateDocumentMeta(config.value)
 
   try {
     config.value = await loadSiteConfig()
   } finally {
-    updateDocumentTitle(config.value.pageTitle)
+    updateDocumentMeta(config.value)
     loading.value = false
   }
 })

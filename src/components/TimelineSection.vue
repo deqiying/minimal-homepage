@@ -89,7 +89,6 @@ defineProps<{
     linear-gradient(145deg, rgb(20 27 40 / 0.92), rgb(20 27 40 / 0.7)),
     linear-gradient(180deg, rgb(121 199 255 / 0.08), transparent 45%);
   box-shadow: var(--shadow-card);
-  backdrop-filter: blur(10px);
 }
 
 @media (max-width: 720px) {

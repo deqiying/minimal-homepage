@@ -1,21 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="minimal-homepage favicon">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="minimal-homepage laughing character favicon">
   <defs>
     <linearGradient id="bg" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#0b1019" />
       <stop offset="0.55" stop-color="#121a28" />
       <stop offset="1" stop-color="#141c2a" />
     </linearGradient>
-    <radialGradient id="halo" cx="33" cy="23" r="27" gradientUnits="userSpaceOnUse">
+    <radialGradient id="halo" cx="33" cy="24" r="28" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#79c7ff" stop-opacity="0.42" />
       <stop offset="0.55" stop-color="#79c7ff" stop-opacity="0.14" />
       <stop offset="1" stop-color="#79c7ff" stop-opacity="0" />
     </radialGradient>
-    <linearGradient id="seven" x1="16" y1="18" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+    <linearGradient id="laugh" x1="16" y1="14" x2="48" y2="52" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#9ff2ff" />
       <stop offset="0.45" stop-color="#79c7ff" />
       <stop offset="1" stop-color="#4f72ff" />
     </linearGradient>
-    <linearGradient id="seven-shine" x1="22" y1="18" x2="40" y2="44" gradientUnits="userSpaceOnUse">
+    <linearGradient id="laugh-shine" x1="20" y1="16" x2="40" y2="44" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#ffffff" stop-opacity="0.9" />
       <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
     </linearGradient>
@@ -32,20 +32,38 @@
   <ellipse cx="33" cy="25" rx="22" ry="18" fill="url(#halo)" />
 
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M13 33 C24 30 35 28 55 23" stroke="#0f2141" stroke-opacity="0.68" stroke-width="8" transform="translate(1 1)" />
-    <path
-      d="M33 15 C36 22 35 28 31 36 C28 42 28 47 31 51 C34 55 42 56 50 52"
-      stroke="#0f2141"
-      stroke-opacity="0.68"
-      stroke-width="8"
-      transform="translate(1 1)"
-    />
+    <g stroke="#0f2141" stroke-opacity="0.68" stroke-width="7.4" transform="translate(1 1)">
+      <path d="M18 18 23 14" />
+      <path d="M16.5 22.5h11" />
+      <path d="M23 16.5c-.3 4.6-2.2 9.3-5.8 13.1" />
+      <path d="M46 18 41 14" />
+      <path d="M36.5 22.5h11" />
+      <path d="M41 16.5c.3 4.6 2.2 9.3 5.8 13.1" />
+      <path d="M20 31.5h24" />
+      <path d="M32 28v6.4" />
+      <path d="M31.5 31.5c-.5 5.8-4.4 11.2-11.8 15.8" />
+      <path d="M33.5 31.5c2.1 4.7 6.3 8.8 12.5 12.2" />
+      <path d="M25.5 42.8c2.7 1.1 5 3 6.8 6" />
+    </g>
 
     <g filter="url(#soft-glow)">
-      <path d="M13 33 C24 30 35 28 55 23" stroke="url(#seven)" stroke-width="6.8" />
-      <path d="M33 15 C36 22 35 28 31 36 C28 42 28 47 31 51 C34 55 42 56 50 52" stroke="url(#seven)" stroke-width="6.8" />
-      <path d="M20 31 C28 29 36 27 48 24" stroke="url(#seven-shine)" stroke-width="2.2" />
-      <path d="M34 18 C35 24 33 30 30 37" stroke="url(#seven-shine)" stroke-width="1.8" />
+      <g stroke="url(#laugh)" stroke-width="5.8">
+        <path d="M18 18 23 14" />
+        <path d="M16.5 22.5h11" />
+        <path d="M23 16.5c-.3 4.6-2.2 9.3-5.8 13.1" />
+        <path d="M46 18 41 14" />
+        <path d="M36.5 22.5h11" />
+        <path d="M41 16.5c.3 4.6 2.2 9.3 5.8 13.1" />
+        <path d="M20 31.5h24" />
+        <path d="M32 28v6.4" />
+        <path d="M31.5 31.5c-.5 5.8-4.4 11.2-11.8 15.8" />
+        <path d="M33.5 31.5c2.1 4.7 6.3 8.8 12.5 12.2" />
+        <path d="M25.5 42.8c2.7 1.1 5 3 6.8 6" />
+      </g>
+      <path d="M18.6 17.6 22.4 14.8" stroke="url(#laugh-shine)" stroke-width="1.8" />
+      <path d="M37.6 22h8.2" stroke="url(#laugh-shine)" stroke-width="1.6" />
+      <path d="M21.4 31h20.2" stroke="url(#laugh-shine)" stroke-width="1.6" />
+      <path d="M34.4 32.4c1.5 3.2 4.8 6.5 9.1 9.2" stroke="url(#laugh-shine)" stroke-width="1.7" />
     </g>
   </g>
 </svg>

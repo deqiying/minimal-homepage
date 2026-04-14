@@ -7,8 +7,9 @@
 ## 特性
 
 - 配置驱动：通过 public/config.yaml 管理页面文案、时间线和跳转入口。
+- 站点图标配置化：支持通过配置切换浏览器标签页 favicon，并保留默认图标兜底。
 - 多行内容友好：时间线内容支持 YAML 块文本书写，更适合持续维护。
-- 页脚配置化：支持网站图标、Footer navigation、ICP备案、公安备案与版权文案切换。
+- 页脚配置化：支持品牌图标、Footer navigation、ICP备案、公安备案与版权文案切换。
 - 单页极简：聚焦个人主页导航，不依赖后端接口。
 - 响应式布局：支持桌面端、平板端、移动端。
 - 打字机标题：基于 typed.js 实现，支持 reduced-motion 降级。
@@ -82,6 +83,7 @@ pnpm preview
 ~~~
 
 注意：请通过 HTTP 服务访问构建产物。直接使用 file:// 打开 dist/index.html 可能导致空白页。
+补充：`pnpm preview` 展示的是 `dist/` 构建产物；当前构建流程会保留已存在的 `dist/config.yaml`，因此本地预览默认优先读取该文件内容。
 
 ## 配置文件
 
@@ -90,6 +92,7 @@ pnpm preview
 - pageTitle: 页面标题。
 - titleTyping: 标题打字机文案数组。
 - subtitle: 副标题。
+- siteIcon.favicon: 浏览器标签页 favicon 资源路径（可选，默认回退 `favicon.svg`）。
 - layout.columns.desktop/tablet/mobile: 不同端的网格列数。
 - typewriter: 打字机参数（速度、延迟、循环等）。
 - timeline: 时间线数组。
@@ -166,6 +169,10 @@ footer 推荐字段：
 ### 修改站点入口要改代码吗？
 
 通常不需要。新增、删除、调整时间线或跳转入口优先修改 public/config.yaml。
+
+### 修改 public/config.yaml 后，为什么 preview 没变化？
+
+因为 `pnpm preview` 读取的是 `dist/` 构建产物，而当前构建流程会保留已存在的 `dist/config.yaml`。如果本地预览还是旧内容，优先检查 `dist/config.yaml` 是否仍是旧配置。
 
 ## 文档
 

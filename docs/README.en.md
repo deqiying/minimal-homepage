@@ -7,6 +7,7 @@ This is a single-page frontend site that generates navigation cards and a vertic
 ## Features
 
 - Config-driven: manage title text, timeline entries, and links in public/config.yaml.
+- Configurable site icon: switch the browser favicon from config while keeping a default fallback icon.
 - Better multiline authoring: timeline content uses YAML block text for easier editing.
 - Configurable footer: supports brand icon, footer navigation, ICP record, public security record, and copyright text.
 - Minimal single-page architecture: no backend APIs required.
@@ -82,6 +83,7 @@ pnpm preview
 ~~~
 
 Important: access the built app via HTTP. Opening dist/index.html with file:// may result in a blank page.
+Note: `pnpm preview` serves the built `dist/` output. The current build flow preserves an existing `dist/config.yaml`, so local preview will keep reading that file when it already exists.
 
 ## Configuration
 
@@ -92,6 +94,7 @@ Key fields:
 - pageTitle: main page title.
 - titleTyping: typewriter strings array.
 - subtitle: subtitle text.
+- siteIcon.favicon: browser favicon asset path (optional, falls back to `favicon.svg`).
 - layout.columns.desktop/tablet/mobile: responsive grid columns.
 - typewriter: typing behavior options.
 - timeline: timeline entry list.
@@ -168,6 +171,10 @@ Because file:// has stricter loading behavior for module assets. Use pnpm previe
 ### Do I need to change source code when adding links?
 
 Usually no. Update public/config.yaml first.
+
+### Why does local preview still show old content after I changed public/config.yaml?
+
+Because `pnpm preview` reads the built `dist/` output, and the current build flow preserves an existing `dist/config.yaml`. If preview still shows old data, check whether `dist/config.yaml` is still an older copy first.
 
 ## Docs
 

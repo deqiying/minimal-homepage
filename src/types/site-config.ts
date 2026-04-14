@@ -63,6 +63,10 @@ export interface FooterCopyrightConfig {
   dynamicYear: boolean
 }
 
+export interface SiteIconConfig {
+  favicon?: string
+}
+
 export interface FooterConfig {
   enabled: boolean
   brand: FooterBrandConfig
@@ -76,6 +80,7 @@ export interface SiteConfig {
   pageTitle: string
   titleTyping: string[]
   subtitle?: string
+  siteIcon?: SiteIconConfig
   layout: GridLayoutConfig
   typewriter: TypewriterConfig
   timeline: TimelineEntry[]

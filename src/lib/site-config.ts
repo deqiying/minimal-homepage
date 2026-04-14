@@ -4,6 +4,7 @@ import type {
   FooterNavigationItem,
   FooterPoliceConfig,
   SiteConfig,
+  SiteIconConfig,
   SiteLink,
   TimelineEntry,
 } from '../types/site-config'
@@ -13,6 +14,9 @@ const defaultConfig: SiteConfig = {
   pageTitle: '在线服务',
   titleTyping: ['在线服务'],
   subtitle: 'Config-driven shortcut dashboard',
+  siteIcon: {
+    favicon: 'favicon.svg',
+  },
   layout: {
     columns: {
       desktop: 3,
@@ -73,10 +77,15 @@ const cloneFooterConfig = (): FooterConfig => ({
   },
 })
 
+const cloneSiteIconConfig = (): SiteIconConfig => ({
+  ...defaultConfig.siteIcon,
+})
+
 export const createDefaultSiteConfig = (): SiteConfig => ({
   pageTitle: defaultConfig.pageTitle,
   titleTyping: [...defaultConfig.titleTyping],
   subtitle: defaultConfig.subtitle,
+  siteIcon: cloneSiteIconConfig(),
   layout: {
     columns: {
       ...defaultConfig.layout.columns,
@@ -225,6 +234,18 @@ const sanitizeFooterRecord = <T extends FooterIcpConfig | FooterPoliceConfig>(in
   } as T
 }
 
+const sanitizeSiteIcon = (input: unknown): SiteIconConfig => {
+  const candidate = input && typeof input === 'object' ? (input as Record<string, unknown>) : {}
+  const favicon =
+    typeof candidate.favicon === 'string' && candidate.favicon.trim().length > 0
+      ? candidate.favicon.trim()
+      : defaultConfig.siteIcon?.favicon
+
+  return {
+    favicon,
+  }
+}
+
 const sanitizeFooter = (input: unknown, fallbackName: string): FooterConfig => {
   const fallbackFooter: FooterConfig = {
     ...defaultConfig.footer,
@@ -342,12 +363,14 @@ const sanitizeConfig = (input: unknown): SiteConfig => {
       ? candidate.pageTitle
       : defaultConfig.pageTitle
 
+  const siteIcon = sanitizeSiteIcon(candidate.siteIcon)
   const footer = sanitizeFooter(candidate.footer, pageTitle)
 
   return {
     pageTitle,
     titleTyping: titleTyping.length > 0 ? titleTyping : defaultConfig.titleTyping,
     subtitle: typeof candidate.subtitle === 'string' ? candidate.subtitle : defaultConfig.subtitle,
+    siteIcon,
     layout: {
       columns: {
         desktop: Number.isFinite(desktop) && desktop > 0 ? desktop : defaultConfig.layout.columns.desktop,

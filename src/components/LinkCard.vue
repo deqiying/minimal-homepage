@@ -30,8 +30,9 @@ defineProps<{
   min-height: 5.6rem;
   border-radius: var(--radius-card);
   border: 2px solid var(--color-card-border);
-  background: var(--color-card-bg);
-  backdrop-filter: blur(3px);
+  background:
+    linear-gradient(145deg, rgb(20 27 40 / 0.9), rgb(20 27 40 / 0.76)),
+    linear-gradient(180deg, rgb(121 199 255 / 0.06), transparent 55%);
   color: var(--color-text-primary);
   padding: 1.1rem 1.35rem;
   text-decoration: none;
@@ -46,7 +47,9 @@ defineProps<{
 .link-card:hover {
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--color-accent) 72%, white);
-  background: color-mix(in srgb, var(--color-card-bg) 84%, rgb(121 199 255 / 0.18));
+  background:
+    linear-gradient(145deg, rgb(25 33 49 / 0.94), rgb(22 29 43 / 0.82)),
+    linear-gradient(180deg, rgb(121 199 255 / 0.14), transparent 55%);
   box-shadow: var(--shadow-card-hover);
 }
 
@@ -70,7 +73,9 @@ defineProps<{
 
 .is-highlighted {
   border-color: color-mix(in srgb, var(--color-accent) 58%, var(--color-card-border));
-  background: color-mix(in srgb, var(--color-accent) 14%, var(--color-card-bg));
+  background:
+    linear-gradient(145deg, rgb(28 39 58 / 0.94), rgb(21 29 43 / 0.82)),
+    linear-gradient(180deg, rgb(121 199 255 / 0.16), transparent 58%);
   color: var(--color-accent);
 }
 </style>

@@ -195,33 +195,30 @@ const linkRel = (target?: '_self' | '_blank') =>
 .site-footer {
   position: fixed;
   left: 50%;
-  bottom: clamp(0.55rem, 1.8vh, 1rem);
+  bottom: 0.8rem;
   transform: translateX(-50%);
   width: min(1220px, 92vw);
   z-index: 50;
   display: flex;
   align-items: center;
-  min-height: clamp(3.1rem, 6vh, 4rem);
-  padding: clamp(0.65rem, 1.5vh, 0.9rem) clamp(0.95rem, 2vw, 1.4rem);
+  min-height: 3.5rem;
+  padding: 0.78rem 1.2rem;
   border: 1px solid color-mix(in srgb, var(--color-card-border) 88%, white 12%);
   border-radius: var(--radius-card);
   background:
     linear-gradient(130deg, rgb(20 27 40 / 0.84), rgb(20 27 40 / 0.62)),
     linear-gradient(180deg, rgb(121 199 255 / 0.08), transparent 40%);
   box-shadow: 0 18px 42px rgb(4 8 20 / 0.42);
-  backdrop-filter: blur(12px) saturate(120%);
   animation: footer-float-in 0.45s ease-out;
   transition:
-    min-height 0.22s ease,
-    padding 0.22s ease,
     box-shadow 0.22s ease,
     border-color 0.22s ease,
-    font-size 0.22s ease;
+    background-color 0.22s ease;
 }
 
 .site-footer.is-compact {
-  min-height: clamp(2.42rem, 4.4vh, 3.1rem);
-  padding: clamp(0.42rem, 0.95vh, 0.56rem) clamp(0.82rem, 1.7vw, 1.08rem);
+  min-height: 2.8rem;
+  padding: 0.52rem 1rem;
   box-shadow: 0 12px 28px rgb(4 8 20 / 0.34);
 }
 
@@ -358,13 +355,13 @@ const linkRel = (target?: '_self' | '_blank') =>
     width: min(96vw, 740px);
     left: 50%;
     bottom: 0.5rem;
-    min-height: clamp(2.38rem, 5.6vh, 3rem);
+    min-height: 2.65rem;
     display: block;
     padding: 0.5rem 0.82rem;
   }
 
   .site-footer.is-compact {
-    min-height: clamp(2.2rem, 5vh, 2.72rem);
+    min-height: 2.38rem;
     padding: 0.42rem 0.72rem;
   }
 
